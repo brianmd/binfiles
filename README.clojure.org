@@ -1,5 +1,6 @@
 * Purpose
-Ease development of clojure in docker containers.
+Ease development of clojure in docker containers. Concept is to run editor on host
+and clojure environment (repl/figwheel) in docker containers.
 
 Why develop in containers? Security. We all to often need to keep the http port open
 for others to view our work, but how secure is the development code? We limit the
