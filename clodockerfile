@@ -2,16 +2,6 @@ FROM clojure:latest
 
 RUN apt-get update && \
     apt-get install -y maven
-    # apt-get install -y sudo
-
-# ENV MAVEN_VERSION="3.3.9" \
-#     M2_HOME=/usr/lib/mvn
-
-# RUN cd /tmp && \
-#   wget "http://ftp.unicamp.br/pub/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz" && \
-#   tar -zxvf "apache-maven-$MAVEN_VERSION-bin.tar.gz" && \
-#   mv "apache-maven-$MAVEN_VERSION" "$M2_HOME" && \
-#   ln -s "$M2_HOME/bin/mvn" /usr/bin/mvn
 
 ARG USERNAME=summit
 ARG USERID=1000
@@ -20,11 +10,7 @@ RUN echo "username:$USERNAME"
 RUN echo "userid:$USERID"
 
 RUN addgroup -gid $USERID $USERNAME && \
-    adduser --disabled-password --gecos '' -u $USERID --gid $USERID $USERNAME && \
-    adduser $USERNAME sudo
-    # echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# RUN apt-get install -y telnet
+    adduser --disabled-password --gecos '' -u $USERID --gid $USERID $USERNAME
 
 RUN echo "cleaning up" && \
   # apk del wget && \
@@ -32,14 +18,11 @@ RUN echo "cleaning up" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm -f  /var/cache/apk/*
 
-# 7003=nrepl, 7002=cljs-nrepl, 3449=fig-http-server, 3007=http-server
-# EXPOSE 3007 7003 7002 3449
 # 7100=nrepl, 7101=cljs-nrepl, 3449=fig-http-server, 
-EXPOSE 7100 7101 7202 3449
+EXPOSE 7100 7101 7102 3449
 
 RUN mkdir -p /home/$USERNAME/project
 WORKDIR /home/$USERNAME/project
 USER $USERNAME
 ENV HOME /home/$USERNAME
-
 
