@@ -15,9 +15,7 @@ docker run \
   -ti \
   --rm \
   --workdir $DOCKER_WORKDIR \
-  --add-host mysql.dev:10.10.0.110 \
-  --add-host mysql.prod:10.5.0.138 \
-  -p 127.0.0.1:7002:7002 \
+  -p 127.0.0.1:7102:7102 \
   -p 0.0.0.0:$HTTP_PORT:3449 \
   -v $CURR_PATH:$DOCKER_WORKDIR \
   $CLO_VOLUMES \

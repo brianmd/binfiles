@@ -20,13 +20,8 @@ docker run \
   -ti \
   --rm \
   --workdir $DOCKER_WORKDIR \
-  --add-host mysql.dev:10.10.0.110 \
-  --add-host mysql.prod:10.5.0.138 \
-  -p 127.0.0.1:$NREPL_PORT:7100 \
   -v $CURR_PATH:$DOCKER_WORKDIR \
-  -v $CURR_PATH/.docker-state/m2:$DOCKER_USER_HOME/.m2 \
-  -v $CURR_PATH/.docker-state/lein:$DOCKER_USER_HOME/.lein \
-  -v $CURR_PATH/.docker-state/log:$DOCKER_WORKDIR/log \
-  -v $CURR_PATH/../.. \
+  $CLO_VOLUMES \
+  $DOCKER_RUN_FLAGS \
   $PROJ_NAME \
   /bin/bash

@@ -3,17 +3,17 @@ FROM clojure:latest
 RUN apt-get update && \
     apt-get install -y maven
 
-ARG USERNAME=summit
+ARG USERNAME=clojure
 ARG USERID=1000
+ARG GROUPID=$USERID
 
-RUN echo "username:$USERNAME"
-RUN echo "userid:$USERID"
-
-RUN addgroup -gid $USERID $USERNAME && \
-    adduser --disabled-password --gecos '' -u $USERID --gid $USERID $USERNAME
+RUN echo "username:$USERNAME" && \
+    echo "userid:$USERID" && \
+    echo "groupid:$GROUPID" && \
+    addgroup -gid $USERID $USERNAME && \
+    adduser --disabled-password --gecos '' -u $USERID --gid $GROUPID $USERNAME
 
 RUN echo "cleaning up" && \
-  # apk del wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm -f  /var/cache/apk/*

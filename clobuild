@@ -7,13 +7,13 @@ source cloprep
 cp $SCRIPT_DIR/clodockerfile .docker-state/Dockerfile
 
 if [[ -f bin/pre-build ]]; then
-    source bin/pre-build
+  source bin/pre-build
 fi
 
 docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t "$PROJ_NAME" .
 
 if [[ -f bin/post-build ]]; then
-    source bin/post-build
+  source bin/post-build
 fi
 
 echo

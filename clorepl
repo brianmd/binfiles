@@ -5,11 +5,6 @@
 
 source cloprep
 
-# try to delete the .nrepl-port file.
-# the docker container user may not be able to delete it  owned by the host user
-# rm -f .nrepl-port
-# rm -f .lein-env
-
 if [[ -z $NUM_ARG ]]; then
     NREPL_PORT=7100
 else
@@ -20,8 +15,6 @@ docker run \
   -ti \
   --rm \
   --workdir $DOCKER_WORKDIR \
-  --add-host mysql.dev:10.10.0.110 \
-  --add-host mysql.prod:10.5.0.138 \
   -p 127.0.0.1:$NREPL_PORT:7100 \
   -v $CURR_PATH:$DOCKER_WORKDIR \
   $CLO_VOLUMES \
