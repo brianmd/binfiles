@@ -6,10 +6,14 @@ source cloprep
 
 cp $SCRIPT_DIR/clodockerfile .docker-state/Dockerfile
 
-echo "id:$USERID"
-echo "name:$USERNAME"
-echo docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t $PROJ_NAME .
+# echo "id:$USERID"
+# echo "name:$USERNAME"
+# echo docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t $PROJ_NAME .
 docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t "$PROJ_NAME" .
+
+if [[ -f bin/post-build ]]; then
+    source bin/post-build
+fi
 
 echo
 echo "Built image: $PROJ_NAME"
