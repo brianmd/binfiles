@@ -41,5 +41,5 @@ repositories don't have to be re-downloaded each time).
 - shared: the same UID/GID may be shared within the docker container as the user building the image.
   This allows ~/.m2 to be shared. However, should a hacker break out of the container back to the host,
   she will be able to obtain root privileges. It is safer to not share (which is the default), in which
-  case the UID is the same as "nobody", i.e., no privileges.
+  case the UID is hopefully not associated with any user from the host computer (UID=64535), i.e., no privileges.
 - port number (for nrepl, http): specific to the script.
