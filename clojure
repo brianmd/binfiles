@@ -13,7 +13,7 @@ if [[ -d $HOME/.m2 ]]; then
 fi
 
 if docker images | grep --quiet clojure-image ; then
-    echo 'clojure-image is already built'
+    echo
 else
     echo "building clojure-image\n"
     (cd $SCRIPT_DIR && docker build -f Dockerfile.clojure --build-arg USERNAME=$WHOAMI --build-arg USERID=$USERID -t clojure-image .)

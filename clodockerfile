@@ -1,28 +1,25 @@
-FROM clojure:latest
+FROM bach/clojure-maven:latest
 
-RUN apt-get update && \
-    apt-get install -y maven
+# ARG USERNAME=clojure
+# ARG USERID=1000
+# ARG GROUPID=$USERID
 
-ARG USERNAME=clojure
-ARG USERID=1000
-ARG GROUPID=$USERID
+# RUN echo "username:$USERNAME" && \
+#     echo "userid:$USERID" && \
+#     echo "groupid:$GROUPID" && \
+#     addgroup -gid $USERID $USERNAME && \
+#     adduser --disabled-password --gecos '' -u $USERID --gid $GROUPID $USERNAME
 
-RUN echo "username:$USERNAME" && \
-    echo "userid:$USERID" && \
-    echo "groupid:$GROUPID" && \
-    addgroup -gid $USERID $USERNAME && \
-    adduser --disabled-password --gecos '' -u $USERID --gid $GROUPID $USERNAME
-
-RUN echo "cleaning up" && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    rm -f  /var/cache/apk/*
+# RUN echo "cleaning up" && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+#     rm -f  /var/cache/apk/*
 
 # 7100=nrepl, 7101=cljs-nrepl, 3449=fig-http-server, 
 EXPOSE 7100 7101 7102 3449
 
-RUN mkdir -p /home/$USERNAME/project
-WORKDIR /home/$USERNAME/project
-USER $USERNAME
-ENV HOME /home/$USERNAME
+# RUN mkdir -p /home/$USERNAME/project
+# WORKDIR /home/$USERNAME/project
+# USER $USERNAME
+# ENV HOME /home/$USERNAME
 

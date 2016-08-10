@@ -10,7 +10,8 @@ if [[ -f bin/pre-build ]]; then
   source bin/pre-build
 fi
 
-docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t "$PROJ_NAME" .
+# docker build --build-arg USERID=$USERID --build-arg USERNAME=$WHOAMI -f .docker-state/Dockerfile -t "$PROJ_NAME" .
+docker build -f .docker-state/Dockerfile -t "$PROJ_NAME" .
 
 if [[ -f bin/post-build ]]; then
   source bin/post-build
