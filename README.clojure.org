@@ -13,28 +13,28 @@ repositories don't have to be re-downloaded each time).
 * Scripts
 - clojure: runs a clojure environment as the currently logged in user (as opposed to root).
   If your computer doesn't have java, etc. on the host, this is useful for
-creating projects with lein. Will build the necessary docker image if it
-doesn't exist. *clojure* runs the image with bin/bash. *clojure lein new app test*
-creates a new application. Note: this is a different image than what is created
-with clobuild. It is mostly used for creating new projects. Clobuild is for
-running existing projects.
+  creating projects with lein. Will build the necessary docker image if it
+  doesn't exist. *clojure* runs the image with bin/bash. *clojure lein new app test*
+  creates a new application. Note: this is a different image than what is created
+  with clobuild. It is mostly used for creating new projects. Clobuild is for
+  running existing projects.
 - clobuild: builds the docker container for the project in the current directory.
-Shared volume directories will be created in *.docker-state* to speed startup and
-to isolate files which may have a different UID/GID. You should gitignore this
-directory.
+  Shared volume directories will be created in *.docker-state* to speed startup and
+  to isolate files which may have a different UID/GID. You should gitignore this
+  directory.
 
-You may use 'shared' as a parameter, in which case the user will share
-your UID/GID, as well as your .m2 directory, allowing faster initial
-startup and some less disk space. This does reduce security some, but
-may be useful for quick experiments.
+  You may use 'shared' as a parameter, in which case the user will share
+  your UID/GID, as well as your .m2 directory, allowing faster initial
+  startup and some less disk space. This does reduce security some, but
+  may be useful for quick experiments.
 
-(Note: if shared is used here, it needs to be used on the other commands
-as well, as the UID/GID for the created user depends on whether it is
-shared.)
+  (Note: if shared is used here, it needs to be used on the other commands
+  as well, as the UID/GID for the created user depends on whether it is
+  shared.)
 - clorepl: runs lein repl in the image built with clobuild, exposing the
-nrepl-port.
+  nrepl-port.
 - clofig: runs lein figwheel in the image built with clobuild, exposing the
-http port.
+  http port.
 - clobash: runs /bin/bash in the image built with clobuild.
 * Arguments
 - imagename: default is the directory's name.
