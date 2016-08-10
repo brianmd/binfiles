@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [[ -f bin/pre-prep ]]; then
+    source bin/pre-prep
+fi
+
 CLO_SHARED=false
 if [[ $NO_SIDE_EFFECTS == true ]]; then
   CLO_SHARED=true
@@ -74,3 +78,8 @@ else
   CLO_VOLUMES=" -v $HOME/.m2:$DOCKER_USER_HOME/.m2 \
    -v $HOME/.lein:$DOCKER_USER_HOME/.lein"
 fi
+
+if [[ -f bin/post-prep ]]; then
+  source bin/post-prep
+fi
+
