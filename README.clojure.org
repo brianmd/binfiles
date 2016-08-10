@@ -38,7 +38,7 @@ repositories don't have to be re-downloaded each time).
 - clobash: runs /bin/bash in the image built with clobuild.
 * Arguments
 - imagename: default is the directory's name.
-- share: the same UID/GID may be shared within the docker container as the user building the image.
+- shared: the same UID/GID may be shared within the docker container as the user building the image.
   This allows ~/.m2 to be shared. However, should a hacker break out of the container back to the host,
   she will be able to obtain root privileges. It is safer to not share (which is the default), in which
   case the UID is the same as "nobody", i.e., no privileges.
