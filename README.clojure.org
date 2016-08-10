@@ -12,7 +12,7 @@ several directories should maintain their state between builds (e.g., ~/.m2 so t
 repositories don't have to be re-downloaded each time).
 * Scripts
 - clojure: runs a clojure environment as the currently logged in user (as opposed to root).
-If your computer doesn't have java, etc. on the host, this is useful for
+  If your computer doesn't have java, etc. on the host, this is useful for
 creating projects with lein. Will build the necessary docker image if it
 doesn't exist. *clojure* runs the image with bin/bash. *clojure lein new app test*
 creates a new application. Note: this is a different image than what is created
