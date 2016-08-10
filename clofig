@@ -1,0 +1,35 @@
+#!/bin/bash
+# Usage: clofig [http-port] [imagename]
+#        http-port: default is 3449
+#        imagename: default is the current directory's name
+
+source cloprep
+
+if [[ -z $NUM_ARG ]]; then
+    HTTP_PORT=3449
+else
+    HTTP_PORT=$NUM_ARG
+fi
+
+docker run \
+  -ti \
+  --rm \
+  --workdir $DOCKER_WORKDIR \
+  --add-host mysql.dev:10.10.0.110 \
+  --add-host mysql.prod:10.5.0.138 \
+  -p 127.0.0.1:7002:7002 \
+  -p 0.0.0.0:$HTTP_PORT:3449 \
+  -v $CURR_PATH:$DOCKER_WORKDIR \
+  $CLO_VOLUMES \
+  $PROJ_NAME \
+  lein figwheel
+
+# lein repl :headless :host 0.0.0.0 :port $NREPL_PORT
+# -v $CURR_PATH:$DOCKER_WORKDIR \
+# -v $CURR_PATH/.docker-state/m2:$HOME/.m2 \
+# -v $CURR_PATH/.docker-state/lein:$HOME/.lein \
+# -v $CURR_PATH/.docker-state/log:$DOCKER_WORKDIR/log \
+# -v $CURR_PATH/../.. \
+# $PROJ_NAME \
+
+  # -v $(pwd -P)/../../utils:/home/summit/utils \

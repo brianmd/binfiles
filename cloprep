@@ -1,0 +1,76 @@
+#!/bin/bash
+
+CLO_SHARED=false
+if [[ $NO_SIDE_EFFECTS == true ]]; then
+  CLO_SHARED=true
+else
+  while [[ $# -gt 0 ]]; do
+    if [[ $1 =~ ^[0-9]+$ ]]; then
+        NUM_ARG=$1
+    elif [[ $1 == "shared" ]]; then
+        CLO_SHARED=true
+    else
+        PROJ_NAME="$1"
+    fi
+    shift
+  done
+fi
+# echo "proj:$PROJ_NAME, num:$NUM_ARG, shared?:$CLO_SHARED"
+
+if [[ $CLO_SHARED == "true" ]]; then
+  WHOAMI=`whoami`
+  USERID=`grep $WHOAMI /etc/passwd | cut -d: -f 3`
+else
+  WHOAMI=clojure
+  # Note: consider using a random number for security:
+  #   if a container is breached back to the host, all
+  #   projects created with this script will be vulnerable
+  #   because they all have uid=64535.
+  #   On the flip side, need to use a consistent UID
+  #   on creation and on clorepl/clofig/etc.
+  #   so an algorithm that mapped the imagename to
+  #   range [63000, 65000] might be better.
+  USERID=64535
+fi
+GROUPID=$USERID
+
+DOCKER_USER_HOME="/home/$WHOAMI"
+DOCKER_WORKDIR="$DOCKER_USER_HOME/project"
+CURR_PATH=`pwd -P`
+# BASE_NAME=`basename "$PWD"`
+BASE_NAME=`basename "$CURR_PATH"`
+
+if [[ -f $HOME/.lein/profiles.clj ]]; then
+  mkdir -p .docker-state/lein
+  cp $HOME/.lein/profiles.clj .docker-state/lein/
+fi
+
+# is one of these better than the other?
+# SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
+# SCRIPT_DIR=`dirname "$(readlink -f $0)"`
+# SCRIPT_DIR=$(dirname `readlink -f "$0"`)
+SCRIPT_DIR=`dirname "$(readlink -f "$0")"`
+
+PROJ_NAME=$BASE_NAME
+
+if [[ $NO_SIDE_EFFECTS != true ]]; then
+  mkdir -p .docker-state/m2
+  mkdir -p .docker-state/lein
+  mkdir -p .docker-state/target
+  mkdir -p .docker-state/log
+fi
+
+if [[ $CLO_SHARED == "false" ]]; then
+  if [[ $NO_SIDE_EFFECTS != true ]]; then
+    touch .lein-env .nrepl-port figwheel_server.log
+    chmod a+rwx .docker-state/* .lein-env .nrepl-port figwheel_server.log
+  fi
+
+  CLO_VOLUMES=" -v $CURR_PATH/.docker-state/m2:$DOCKER_USER_HOME/.m2 \
+   -v $CURR_PATH/.docker-state/lein:$DOCKER_USER_HOME/.lein \
+   -v $CURR_PATH/.docker-state/target:$DOCKER_WORKDIR/target \
+   -v $CURR_PATH/.docker-state/log:$DOCKER_WORKDIR/log"
+else
+  CLO_VOLUMES=" -v $HOME/.m2:$DOCKER_USER_HOME/.m2 \
+   -v $HOME/.lein:$DOCKER_USER_HOME/.lein"
+fi

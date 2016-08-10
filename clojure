@@ -1,0 +1,30 @@
+#!/bin/bash
+# Usage: clojure [args]+
+# Example: clojure lein new app test
+# Example: clojure lein new luminus test +cljs +swagger +auth
+# Example: clojure /bin/bash
+
+NO_SIDE_EFFECTS=true
+source cloprep
+
+if [[ -d $HOME/.m2 ]]; then
+    mkdir -p $HOME/.m2
+    M2_VOLUME="-v $HOME/.m2:$DOCKER_USER_HOME/.m2"
+fi
+
+if docker images | grep --quiet clojure-image ; then
+    echo 'clojure-image is already built'
+else
+    echo "building clojure-image\n"
+    (cd $SCRIPT_DIR && docker build -f Dockerfile.clojure --build-arg USERNAME=$WHOAMI --build-arg USERID=$USERID -t clojure-image .)
+fi
+
+docker run \
+  -ti \
+  --rm \
+  --workdir $DOCKER_WORKDIR \
+  -v $CURR_PATH:$DOCKER_USER_HOME/project \
+  $M2_VOLUME \
+  clojure-image \
+  $@
+

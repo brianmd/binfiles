@@ -1,0 +1,45 @@
+* Purpose
+Ease development of clojure in docker containers.
+
+Why develop in containers? Security. We all to often need to keep the http port open
+for others to view our work, but how secure is the development code? We limit the
+amount of damage occur by containerizing. (Or at least raise the bar on how easily
+damage may be caused.)
+
+Leiningen provides a Dockerfile upon new app creation, which is useful for production.
+However, development is a bit different as the nrepl port needs to be shared with the host, and
+several directories should maintain their state between builds (e.g., ~/.m2 so the
+repositories don't have to be re-downloaded each time).
+* Scripts
+- clojure: runs a clojure environment as the currently logged in user (as opposed to root).
+If your computer doesn't have java, etc. on the host, this is useful for
+creating projects with lein. Will build the necessary docker image if it
+doesn't exist. *clojure* runs the image with bin/bash. *clojure lein new app test*
+creates a new application. Note: this is a different image than what is created
+with clobuild. It is mostly used for creating new projects. Clobuild is for
+running existing projects.
+- clobuild: builds the docker container for the project in the current directory.
+Shared volume directories will be created in *.docker-state* to speed startup and
+to isolate files which may have a different UID/GID. You should gitignore this
+directory.
+
+You may use 'shared' as a parameter, in which case the user will share
+your UID/GID, as well as your .m2 directory, allowing faster initial
+startup and some less disk space. This does reduce security some, but
+may be useful for quick experiments.
+
+(Note: if shared is used here, it needs to be used on the other commands
+as well, as the UID/GID for the created user depends on whether it is
+shared.)
+- clorepl: runs lein repl in the image built with clobuild, exposing the
+nrepl-port.
+- clofig: runs lein figwheel in the image built with clobuild, exposing the
+http port.
+- clobash: runs /bin/bash in the image built with clobuild.
+* Arguments
+- imagename: default is the directory's name.
+- share: the same UID/GID may be shared within the docker container as the user building the image.
+This allows ~/.m2 to be shared. However, should a hacker break out of the container back to the host,
+she will be able to obtain root privileges. It is safer to not share (which is the default), in which
+case the UID is the same as "nobody", i.e., no privileges.
+- port number (for nrepl, http): specific to the script.
