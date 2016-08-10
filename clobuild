@@ -16,6 +16,10 @@ if [[ -f bin/post-build ]]; then
   source bin/post-build
 fi
 
+if [[ -f bin/user-build ]]; then
+  clobash bin/user-build
+fi
+
 echo
 echo "Built image: $PROJ_NAME"
 

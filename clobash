@@ -3,17 +3,20 @@
 #        nrepl-port: default is 7100
 #        imagename: default is the current directory's name
 
+ARG_COUNT=$#
+ARGS=$@
 source cloprep
 
-# try to delete the .nrepl-port file.
-# the docker container user may not be able to delete it  owned by the host user
-# rm -f .nrepl-port
-# rm -f .lein-env
-
 if [[ -z $NUM_ARG ]]; then
-    NREPL_PORT=7100
+  NREPL_PORT=7100
 else
-    NREPL_PORT=$NUM_ARG
+  NREPL_PORT=$NUM_ARG
+fi
+
+if [[ $ARG_COUNT -ne 0 ]]; then
+  CMD=$ARGS
+else
+  CMD=/bin/bash
 fi
 
 docker run \
@@ -24,4 +27,4 @@ docker run \
   $CLO_VOLUMES \
   $DOCKER_RUN_FLAGS \
   $PROJ_NAME \
-  /bin/bash
+  $CMD
