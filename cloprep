@@ -64,18 +64,28 @@ if [[ $NO_SIDE_EFFECTS != true ]]; then
   mkdir -p .docker-state/log
 fi
 
+
+# TODO: make $CURR_PATH volume read only.
+#       will need to make a few exceptions, such as .nrepl-port
+# but this does not appear to work:
+#    -v $CURR_PATH/.nrepl_port:$DOCKER_WORKDIR/.nrepl_port \
+
 if [[ $CLO_SHARED == "false" ]]; then
   if [[ $NO_SIDE_EFFECTS != true ]]; then
     touch .lein-env .nrepl-port figwheel_server.log
     chmod a+rwx .docker-state/* .lein-env .nrepl-port figwheel_server.log
   fi
 
-  CLO_VOLUMES=" -v $CURR_PATH/.docker-state/m2:$DOCKER_USER_HOME/.m2 \
+  CLO_VOLUMES="\
+   -v $CURR_PATH:$DOCKER_WORKDIR \
+   -v $CURR_PATH/.docker-state/m2:$DOCKER_USER_HOME/.m2 \
    -v $CURR_PATH/.docker-state/lein:$DOCKER_USER_HOME/.lein \
    -v $CURR_PATH/.docker-state/target:$DOCKER_WORKDIR/target \
    -v $CURR_PATH/.docker-state/log:$DOCKER_WORKDIR/log"
 else
-  CLO_VOLUMES=" -v $HOME/.m2:$DOCKER_USER_HOME/.m2 \
+  CLO_VOLUMES="\
+   -v $CURR_PATH:$DOCKER_WORKDIR \
+   -v $HOME/.m2:$DOCKER_USER_HOME/.m2 \
    -v $HOME/.lein:$DOCKER_USER_HOME/.lein"
 fi
 

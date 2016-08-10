@@ -17,7 +17,6 @@ docker run \
   --workdir $DOCKER_WORKDIR \
   -p 127.0.0.1:7102:7102 \
   -p 0.0.0.0:$HTTP_PORT:3449 \
-  -v $CURR_PATH:$DOCKER_WORKDIR \
   $CLO_VOLUMES \
   $DOCKER_RUN_FLAGS \
   $PROJ_NAME \

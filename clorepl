@@ -16,7 +16,6 @@ docker run \
   --rm \
   --workdir $DOCKER_WORKDIR \
   -p 127.0.0.1:$NREPL_PORT:7100 \
-  -v $CURR_PATH:$DOCKER_WORKDIR \
   $CLO_VOLUMES \
   $DOCKER_RUN_FLAGS \
   $PROJ_NAME \
