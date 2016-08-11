@@ -12,10 +12,14 @@ However, development is a bit different as the nrepl port needs to be shared wit
 several directories should maintain their state between builds (e.g., ~/.m2 so the
 repositories don't have to be re-downloaded each time).
 * Usage
+** Configure
+These files should be in your shell's PATH: either add this directory to the PATH or copy the scripts to a directory already in your PATH.
 ** Create a new lein application:
 #+BEGIN_SRC shell
 $ clojure lein new app test-app
 #+END_SRC
+
+Note: will take a long time to download the first time.
 ** Build docker container of the app
 #+BEGIN_SRC shell
 $ cd test-app
