@@ -1,5 +1,5 @@
 # the script "clojure" will run this if clojure-image does not exist.
-FROM bach/clojure-maven:1.0.0
+FROM bach/clojure-user:1.0.0
 
 # Add current user so that the files created by "clojure lein new app <appname>"
 # are owned by the user, not root or the clojure user.
