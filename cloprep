@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Allow project-specific commands
 if [[ -f bin/pre-prep ]]; then
     source bin/pre-prep
 fi

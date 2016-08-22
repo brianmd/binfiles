@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# add to crontab:
+# */5 * * * * . /home/bmd/.config/binfiles/.envrc; /home/bmd/.config/binfiles/dyndns >/home/bmd/Downloads/dyndns.output
 
 import sys
 import xmlrpclib
@@ -14,24 +16,22 @@ server = xmlrpclib.ServerProxy('https://api.webfaction.com/')
 
 my_ip = urllib2.urlopen('http://ip.ryansanden.com/').read().strip()
 
-print "ip: "
+print "ip address is now: "
 print my_ip
 
 home_override = None
 for override in server.list_dns_overrides(session_id):
     if override['domain'] == home_domain:
-        print override
         if override['a_ip'] != '':
             home_override = override
+            break
 
-print "home_override: "
-print home_override
 if home_override:
-    print "home[a_ip]: "
+    print "dns is currently set to: "
     print home_override['a_ip']
 
 if home_override and home_override['a_ip'] == my_ip:
-    print "skipping ..."
+    print "correct ip already set ..."
     sys.exit(0)
 
 print "saving new ip address "
