@@ -1,4 +1,4 @@
-FROM bach/clojure-maven:1.0.0
+FROM index.docker.io/bach/clojure-maven:1.0.0
 
 # ARG USERNAME=clojure
 # ARG USERID=1000
