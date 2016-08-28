@@ -13,7 +13,7 @@
 CURRENT_VERSION=1.0.0
 
 IMAGE_BASENAME="index.docker.io/bach/clojure-image"
-IMAGE_NAME="index.docker.io/$IMAGE_BASENAME:$CURRENT_VERSION"
+IMAGE_NAME="$IMAGE_BASENAME:$CURRENT_VERSION"
 NO_SIDE_EFFECTS=true
 source cloprep
 
