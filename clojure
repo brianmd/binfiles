@@ -36,6 +36,7 @@ docker run \
   --workdir $DOCKER_WORKDIR \
   -v $CURR_PATH:$DOCKER_USER_HOME/project \
   $M2_VOLUME \
+  $SHARED_PORTS \
   $IMAGE_NAME \
   $@
 
