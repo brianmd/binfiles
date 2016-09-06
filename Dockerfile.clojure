@@ -11,11 +11,11 @@ RUN echo "username:$USERNAME" && \
     echo "userid:$USERID"
 
 USER root
-SHELL ["/bin/bash", "-c"]
+SHELL ["/bin/bash", "-c"]  # to enable testing via [[
 RUN if [[ -z $CREATE_USER ]]; then \
       echo "creating $USERNAME" && \
       addgroup -gid $USERID $USERNAME && \
-      adduser --disabled-password --gecos '' -u $USERID --gid $USERID $USERNAME ;\
+      adduser --disabled-password --gecos '' -u $USERID --gid $USERID $USERNAME ; \
     fi
 
 RUN mkdir -p /home/$USERNAME/project
