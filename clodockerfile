@@ -1,4 +1,5 @@
 FROM index.docker.io/bach/clojure-maven:1.0.0
+MAINTAINER bmurphydye@summit.com
 
 # ARG USERNAME=clojure
 # ARG USERID=1000
