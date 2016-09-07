@@ -23,8 +23,9 @@ if [[ -d $HOME/.m2 ]]; then
     M2_VOLUME="-v $HOME/.m2:$DOCKER_USER_HOME/.m2"
 fi
 
+echo $IMAGE_NAME
 # ensure the correct version of clojure-image exists
-if docker images | grep --quiet "$IMAGE_BASENAME.*$CURRENT_VERSION" ; then
+if docker images | grep --quiet "^$IMAGE_BASENAME.*$CURRENT_VERSION" ; then
     echo
 else
     echo "building clojure-image\n"
