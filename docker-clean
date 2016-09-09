@@ -1,6 +1,8 @@
 #!/bin/bash
-docker run --rm --privileged debian:jessie df -h
-docker rm $(docker ps -qa)
-docker rmi $(docker images -q --filter "dangling=true")
-docker volume rm $(docker volume ls -qf dangling=true)
-docker run --rm --privileged debian:jessie df -h
+# http://blog.yohanliyanage.com/2015/05/docker-clean-up-after-yourself/
+#docker run --rm --privileged debian:jessie df -h
+# -v flag removes associated volumes too
+docker rm -v $(docker ps -qa -f status=exited) 2> /dev/null
+docker rmi $(docker images -q --filter dangling=true) 2> /dev/null
+docker volume rm $(docker volume ls -qf dangling=true) 2> /dev/null
+#docker run --rm --privileged debian:jessie df -h
