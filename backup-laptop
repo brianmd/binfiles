@@ -1,0 +1,2 @@
+#!/bin/sh
+rsync -aAXv --delete --info=progress2 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} /media/bmd/Portable/laptop-backup
