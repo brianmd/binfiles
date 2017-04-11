@@ -1,0 +1,3 @@
+#!/bin/sh
+# i3 lock (black background color)
+i3lock -c 000000
