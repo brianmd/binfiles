@@ -32,9 +32,14 @@ else
     (cd $SCRIPT_DIR && docker build -f Dockerfile.clojure --build-arg USERNAME=$WHOAMI --build-arg USERID=$USERID -t $IMAGE_NAME .)
 fi
 
+if [[ -f docker.env ]]; then
+  ENVI='--env-file docker.env'
+fi
+
 docker run \
   -ti \
   --rm \
+  $ENVI \
   --workdir $DOCKER_WORKDIR \
   -v $CURR_PATH:$DOCKER_USER_HOME/project \
   $M2_VOLUME \
