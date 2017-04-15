@@ -15,21 +15,22 @@ CURRENT_VERSION=1.0.0
 IMAGE_BASENAME="index.docker.io/bach/clojure-image"
 IMAGE_BASENAME="clojure-image"
 IMAGE_NAME="$IMAGE_BASENAME:$CURRENT_VERSION"
-NO_SIDE_EFFECTS=true
+NO_SIDE_EFFECTS=true   # used in cloprep
 source cloprep
 
 if [[ -d $HOME/.m2 ]]; then
-    mkdir -p $HOME/.m2
+    mkdir -p "$HOME/.m2"
     M2_VOLUME="-v $HOME/.m2:$DOCKER_USER_HOME/.m2"
 fi
 
-echo $IMAGE_NAME
+echo "imagename:  $IMAGE_NAME"
+
 # ensure the correct version of clojure-image exists
 if docker images | grep --quiet "^$IMAGE_BASENAME.*$CURRENT_VERSION" ; then
     echo
 else
-    echo "building clojure-image\n"
-    (cd $SCRIPT_DIR && docker build -f Dockerfile.clojure --build-arg USERNAME=$WHOAMI --build-arg USERID=$USERID -t $IMAGE_NAME .)
+    printf "building clojure-image\n\n"
+    (cd "$SCRIPT_DIR" && docker build -f Dockerfile.clojure --build-arg USERNAME="$WHOAMI" --build-arg USERID="$USERID" -t "$IMAGE_NAME" .)
 fi
 
 if [[ -f docker.env ]]; then
@@ -40,10 +41,10 @@ docker run \
   -ti \
   --rm \
   $ENVI \
-  --workdir $DOCKER_WORKDIR \
-  -v $CURR_PATH:$DOCKER_USER_HOME/project \
+  --workdir "$DOCKER_WORKDIR" \
+  -v $(pwd -P):"$DOCKER_USER_HOME/project" \
   $M2_VOLUME \
   $SHARED_PORTS \
   $IMAGE_NAME \
-  $@
+  "$@"
 

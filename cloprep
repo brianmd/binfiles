@@ -11,7 +11,7 @@ if [[ $NO_SIDE_EFFECTS == true ]]; then
 else
   while [[ $# -gt 0 ]]; do
     if [[ $1 =~ ^[0-9]+$ ]]; then
-        NUM_ARG=$1
+        NUM_ARG="$1"
     elif [[ $1 == "shared" ]]; then
         CLO_SHARED=true
     else
@@ -22,9 +22,9 @@ else
 fi
 
 if [[ $CLO_SHARED == "true" ]]; then
-  WHOAMI=`whoami`
-  USERID=`grep $WHOAMI /etc/passwd | cut -d: -f 3`
-  GROUPID=`grep $WHOAMI /etc/passwd | cut -d: -f 4`
+  WHOAMI=$(whoami)
+  USERID=$(grep "$WHOAMI" /etc/passwd | cut -d: -f 3)
+  GROUPID=$(grep "$WHOAMI" /etc/passwd | cut -d: -f 4)
 else
   CREATE_USER=false
   WHOAMI=clojure
@@ -34,14 +34,14 @@ fi
 
 DOCKER_USER_HOME="/home/$WHOAMI"
 DOCKER_WORKDIR="$DOCKER_USER_HOME/project"
-CURR_PATH=`pwd -P`
-SCRIPT_DIR=`dirname "$(readlink -f "$0")"`
-BASE_NAME=`basename "$CURR_PATH"`
-PROJ_NAME=$BASE_NAME
+CURR_PATH=$(pwd -P)
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+BASE_NAME=$(basename "$CURR_PATH")
+PROJ_NAME="$BASE_NAME"
 
 if [[ -f $HOME/.lein/profiles.clj ]]; then
   mkdir -p .docker-state/lein
-  cp $HOME/.lein/profiles.clj .docker-state/lein/
+  cp "$HOME/.lein/profiles.clj" .docker-state/lein/
 fi
 
 if [[ $NO_SIDE_EFFECTS != true ]]; then
