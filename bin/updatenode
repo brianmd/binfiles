@@ -1,0 +1,24 @@
+#!/bin/sh
+echo
+echo
+node --version
+echo "hit ctrl-c and 'nodenv install v5.<TAB>' to update node"
+echo
+echo
+echo updating npm
+npm update -g npm
+echo updating gulp
+npm update -g gulp
+echo updating replem
+npm update -g replem
+echo updating testem
+npm update -g testem
+echo updating node-inspector
+npm update -g node-inspector
+echo updating bower
+npm update -g bower
+echo updating yeoman
+npm update -g yo
+echo updating chalk
+npm update -g chalk
+

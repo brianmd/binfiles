@@ -1,0 +1,5 @@
+#!/bin/bash
+vi <(ssh blue-harvest.prod grep \"$@\" /var/www/apps/blue-harvest/current/log/production.log)
+#emacs (ssh blue-harvest.prod grep \"$@\" /var/www/apps/blue-harvest/current/log/production.log)
+
+#vi <(ssh md grep \"$@\" webapps/murphydye/wave.html)

@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "usage: $0 collection_name"
+cd ~/Documents/git/summit/variety
+mongo dev-etl.insummit.com/products --eval "var collection = '$1'" variety.js

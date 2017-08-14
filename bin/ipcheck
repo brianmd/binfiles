@@ -1,0 +1,33 @@
+#!//usr/bin/env ruby
+
+def run(cmd, regex=nil)
+  puts "\n\n$ #{cmd}\n"
+  result = `#{cmd}`
+  if regex
+    puts_with(result, regex)
+  else
+    puts result
+  end
+end
+
+def puts_with(result, regex)
+  result.split("\n").each do |line|
+    puts line if line.match(regex)
+  end
+end
+
+
+ipaddr = ARGV[0]
+
+run("whois #{ipaddr}", /^[^#].*:/)
+
+args = ipaddr.match(/^[0-9\.]*$/) ? '-x' : ''
+cmd = "dig #{args} #{ipaddr}"
+run(cmd, /^[^;]/)
+
+# https://hackertarget.com/nmap-cheatsheet-a-quick-reference-guide/
+#run("sudo nmap -sT #{ipaddr}")
+run("sudo nmap -Pn #{ipaddr}")
+
+`open http://www.infosniper.net/index.php?ip_address=#{ipaddr}&map_source=1&overview_map=1&lang=1&map_type=1&zoom_level=7`
+

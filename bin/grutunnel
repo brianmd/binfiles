@@ -1,0 +1,10 @@
+#!/bin/sh
+echo "purpose: use service on gru (tunnels out)"
+echo "usage:   grutunnel localport gruport monitorport"
+# autossh -M $3 -v -g -R 0.0.0.0:$2:localhost:$1 brianmd -N
+# ssh -L 2181:localhost:2181 root@159.203.223.13
+# localport:finaldestination/port middleserver
+# note: finaldestination is in relation to the middleserver,
+#       so localhost is on gru
+autossh -M $3 -L $1:localhost:$2 root@159.203.223.13
+

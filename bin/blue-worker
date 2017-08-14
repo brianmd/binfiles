@@ -1,0 +1,4 @@
+#!/bin/sh
+cd ~/code/summit/blue-harvest
+source .envrc
+RAILS_ENV=development QUEUE="`hostname`.mail" bundle exec rake environment resque:work

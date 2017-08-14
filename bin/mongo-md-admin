@@ -1,0 +1,2 @@
+#!/bin/sh
+mongo localhost:15917/admin -u brianmdadmin -p $MONGOMD --authenticationDatabase admin

@@ -1,0 +1,9 @@
+#!/bin/sh
+npm i ramda co debug dotenv co-redis co-sleep freezer-js yargs --save
+# npm i co co-sleep co-redis co-body co-request co-views --save
+# npm i koa koa-mount koa-router koa-static --save
+
+# npm i rimraf nodemon jshint --save-dev
+
+# history -- maintains url history in browser
+

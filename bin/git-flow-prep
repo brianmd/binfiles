@@ -1,0 +1,47 @@
+#!/Users/bmd/.rbenv/shims/ruby
+    def revision
+      (`git rev-parse --short HEAD` || 'Unknown').strip
+    end
+
+    def latest_commit(branch='master', path='app/assets')
+      (`git log origin/#{branch} -1 --format='%H' -- #{path} 2> /dev/null` || '').strip
+    end
+
+    def latest_tag(branch='master', path='app/assets')
+      tag = (`git tag --contains #{latest_commit(branch, path)} 2> /dev/null | xargs -I@ git log --format=format:"%ai @%n" -1 @ | sort -r | awk '{print $4}' | head -1` || '').strip
+      tag.blank? ? nil : tag
+    end
+
+    def nearest_tag(branch='master', path='app/assets')
+      tag = (`git describe --tags --abbrev=0 #{latest_commit(branch, path)} 2> /dev/null` || '').strip
+      tag.blank? ? nil : tag
+    end
+
+    def tag(branch='master', path='app/assets')
+      latest_tag(branch, path) || nearest_tag(branch, path) || ''
+    end
+
+cmds = [
+  'git checkout develop',
+  'git pull --rebase',
+  'git checkout master',
+  'git pull --rebase',
+  'git checkout develop',
+  'git --no-pager log -n5 --tags --simplify-by-decoration --pretty="format:%d %ai"',
+]
+
+cmds.each do |cmd|
+  puts "\n\n#{cmd}"
+  #`#{cmd}`
+  system cmd
+  puts $?.inspect
+  status = $?.to_i
+  exit 1 unless status==0
+end
+
+puts "\n\n-------------------------------------------"
+puts "Now run 'git flow release start <tag>'"
+puts "  then bump version in config/application.rb"
+puts "  finally run 'git flow release finish <tag>"
+puts
+puts "Don't forget to 'git push --tag'!"

@@ -1,0 +1,2 @@
+#!/bin/sh
+mongo -u bmdroot -p ${MONGODO}${MONGODO} --authenticationDatabase admin 159.203.249.228:15917

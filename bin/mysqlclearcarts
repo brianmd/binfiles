@@ -1,0 +1,5 @@
+#!/bin/sh
+/usr/local/bin/mysql -h mysql.prod -D blue_harvest_production <<EOF
+delete from line_items where cart_id in (select id from carts where date_add(updated_at, interval 2 day)<now() and title is null and id not in (select main_cart_id from customers where main_cart_id is not null) and id not in (select cart_id from contact_emails where cart_id is not null));
+delete from carts where date_add(updated_at, interval 2 day)<now() and title is null and id not in (select main_cart_id from customers where main_cart_id is not null) and id not in (select cart_id from contact_emails where cart_id is not null);
+EOF

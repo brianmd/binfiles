@@ -1,0 +1,3 @@
+#!/bin/sh
+git checkout --track $1 origin/$1
+

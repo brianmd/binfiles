@@ -1,0 +1,4 @@
+#!/bin/sh
+ag '^\s*\$stderr' --ruby || ag 'logit' --ruby || ag 'binding.pry' --ruby || bundle exec rspec --format progress || if [ -d minispec ]; then bundle exec rspec minispec --format progress; fi
+#ack '^\$stderr' --ruby || ack 'logit' --ruby || ack 'binding.pry' --ruby || bundle exec rspec --format progress || if [ -d minispec ]; then bundle exec rspec minispec --format progress; fi
+

@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+require 'date'
+require 'pathname'
+
+def copy_new_logs
+  connect_archive_volume
+  logs = get_logs
+  new_logs = filter_existing_logs(logs)
+  copy_em(new_logs)
+end
+
+def connect_archive_volume
+  # eject then connect to ensure we don't have a stale, broken connection
+  unless Pathname.new('/Volumes/amazon/summit').exist?
+    puts 'connecting to amazon drive'
+    `expan eject amazon`
+    sleep 1
+    `expan connect amazon`
+    sleep 6
+  end
+end
+
+def archive_log_path
+  '/Volumes/amazon/summit/log/bh'
+end
+
+def production_log_path
+  '/var/www/apps/blue-harvest/current/log'
+end
+
+def get_logs
+  logs = `ssh blue-harvest.prod 'cd #{production_log_path}; ls -l production.log*.gz'`
+  logs = logs.split("\n")
+  logs = logs.collect{|log| log.split}
+  year = Date.today.year
+  logs = logs.collect do |log|
+    date = Date.strptime([log[5], log[6], year].join(' '), '%b %d %Y').strftime('%Y%m%d')
+    filename = "production.#{date}.gz"
+    [filename, log[8]]
+  end
+  logs
+end
+
+def filter_existing_logs(logs)
+  files = Pathname.new(archive_log_path).children(false).collect{|path| path.to_s}
+  new_logs = []
+  logs.each do |log|
+    new_logs << log unless files.include?(log[0])
+  end
+  new_logs
+end
+
+def copy_em(logs)
+  logs.each do |log|
+    puts "copying #{log.inspect}"
+    `scp blue-harvest.prod:#{production_log_path}/#{log[1]} #{archive_log_path}/#{log[0]}`
+  end
+end
+
+#get_logs
+#puts filter_existing_logs([["production.20150910.gz", "production.log.1.gz"], ["production.20150909.gz", "production.log.2.gz"]]).inspect
+copy_new_logs
+

@@ -1,0 +1,2 @@
+#!/bin/sh
+grunt dist && $(yes | cp -fi dist/assets/*.js ../blue-harvest/app/assets/javascripts/brown-truck)

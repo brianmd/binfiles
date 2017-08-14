@@ -1,0 +1,3 @@
+#!/bin/sh
+# set all file timestampls to the same on both drives, then run rsync
+find /media/bmd/plex/[mt]* -exec touch -t 201606250800 {} + && find /media/bmd/plex-too/[mt]* -exec touch -t 201606250800 {} + && rsync -avP /media/bmd/plex /media/bmd/plex-too

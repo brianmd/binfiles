@@ -1,0 +1,6 @@
+#!/bin/sh
+for d in * ; do
+  cd /git/summit/$d
+  pwd
+  git fetch
+done

@@ -1,0 +1,3 @@
+#!/bin/sh
+ssh redis.dev 'redis-cli keys "Query::*" | xargs -d "\n" redis-cli del'
+ssh redis.dev 'redis-cli keys "anemone*" | xargs -d "\n" redis-cli del'

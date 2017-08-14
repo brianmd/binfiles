@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh -L 15917:localhost:15917 md

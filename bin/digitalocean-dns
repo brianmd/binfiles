@@ -1,0 +1,62 @@
+#!/bin/bash
+# adapted from https://github.com/tunix/digitalocean-dyndns/blob/master/dyndns.sh
+
+api_host="https://api.digitalocean.com/v2"
+sleep_interval=${SLEEP_INTERVAL:-300}
+
+die() {
+  echo "$1"
+  exit 1
+}
+
+[[ $(type -P jq) ]] || die "jq is required. run 'apt-get install jq'"
+test -z $DIGITALOCEAN_TOKEN && die "DIGITALOCEAN_TOKEN not set!"
+test -z $DOMAIN && die "DOMAIN not set!"
+test -z $NAME && die "NAME not set!"
+
+dns_list="$api_host/domains/$DOMAIN/records"
+echo
+echo "dns_list"
+echo $dns_list
+domain_records=$(curl -s -X GET \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+  $dns_list)
+echo
+echo "domain_records"
+echo $domain_records
+record=$(echo $domain_records| jq ".domain_records[] | select(.name == \"$NAME\") | select(.type == \"A\")")
+record_ip=$(echo $record | jq ".data")
+record_id=$(echo $record | jq ".id")
+#record_id=$(echo $domain_records| jq ".domain_records[] | select(.name == \"$NAME\") | select(.type == \"A\") | .id")
+echo
+echo "record_id $record_id"
+echo
+
+test -z $record_id && die "No record found with given domain name!"
+
+#while ( true ); do
+  ip="$(curl -s ipinfo.io/ip)"
+  data="{\"type\": \"A\", \"name\": \"$NAME\", \"data\": \"$ip\"}"
+  url="$dns_list/$record_id"
+
+  echo "\"$ip\" !=? $record_ip"
+  if [[ -n $ip ]]; then
+    if [ "\"$ip\"" != $record_ip ]; then
+      echo "Sending data=$data to url=$url"
+
+      curl -s -X PUT \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+        -d "$data" \
+        "$url" &> /dev/null
+    else
+      echo "Ip hasn't changed. Not updating."
+    fi
+  else
+    echo "IP wasn't retrieved within allowed interval. Will try $sleep_interval seconds later.."
+  fi
+
+#  sleep $sleep_interval
+#done
+

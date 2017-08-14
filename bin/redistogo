@@ -1,0 +1,2 @@
+#!/bin/sh
+redis-cli -h koi.redistogo.com -p 9731 -a $REDISTOGO $*

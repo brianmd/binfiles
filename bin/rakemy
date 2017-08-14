@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ -d app ]; then
+  rake -f ~/Dropbox/summit/bin/rake/rakefile.rb $1
+else
+  rake -f ~/Dropbox/summit/bin/rake/rakefile.rb $1
+fi

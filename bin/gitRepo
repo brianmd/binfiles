@@ -1,0 +1,4 @@
+#!/bin/sh
+git clone git@scs-tux02.insummit.com:/home/git/repos/$1
+cd $1
+git checkout -b develop origin/develop && git checkout develop

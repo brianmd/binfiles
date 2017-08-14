@@ -1,0 +1,2 @@
+#!/bin/sh
+mongo --port 15917 -u bmd -p $MONGODO --authenticationDatabase admin

@@ -1,0 +1,2 @@
+#!/bin/sh
+rsync -azP /Users/bmd/data/stibo/output/* md:webapps/murphydye/stibo

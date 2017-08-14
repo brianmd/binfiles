@@ -1,0 +1,8 @@
+#!/bin/sh
+cd /Users/bmd/Dropbox/summit/data/sap
+rsync -avz etl.prod:/home/sap/data/ .
+git add .
+datetag=`date '+%Y%m%d'`
+git commit -m $datetag
+git tag $datetag
+

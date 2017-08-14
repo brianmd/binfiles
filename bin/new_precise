@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "This should be run in a new directory"
+echo
+vagrant init precise64 http://files.vagrantup.com/precise64.box

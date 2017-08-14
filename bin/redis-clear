@@ -1,0 +1,5 @@
+#!/bin/sh
+#redis-cli keys Query\* | xargs -d '\n' redis-cli del
+#redis-cli keys anemone\* | xargs -d '\n' redis-cli del
+redis-cli keys Query\* | xargs redis-cli del
+redis-cli keys anemone\* | xargs redis-cli del

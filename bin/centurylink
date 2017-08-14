@@ -1,0 +1,4 @@
+#!/bin/sh
+# sets up a tunnel from murphydye.com:10904 to modem's config page
+autossh -M 10905 -v -g -R 0.0.0.0:10904:192.168.0.1:80 -p 10987 localhost -N
+

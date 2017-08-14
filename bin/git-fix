@@ -1,0 +1,5 @@
+#!/bin/sh
+# Issue when in dropbox
+# Found at https://gist.github.com/hasantayyar/8332131
+find . -type f -name "* conflicted copy*" -exec rm -f {} \;
+# awk '!/conflicted/' .git/packed-refs > temp && mv temp .git/packed-refs

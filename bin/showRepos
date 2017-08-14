@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh scs-tux02 ls /home/git/repos

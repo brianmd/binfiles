@@ -1,0 +1,7 @@
+#!/bin/sh
+redis-cli flushall
+curl -X POST -H "Content-Type: application/json" -u bh:werilasf879d -d '{"type":"order", "job_account":"", "account_num":"1000736", "ship_to":"", "ship_type":"will-call", "service_center":"ALB1", "customer_expected_date":"2015-07-25", "customer_po_num":"a", "items":"[[\"000000000000029709\",1]]"}' http://localhost:4000/accounts/1000736/orders.json
+
+sleep 2
+
+curl -X POST -H "Content-Type: application/json" -u bh:werilasf879d -d '{"type":"order", "job_account":"", "account_num":"1000736", "ship_to":"", "ship_type":"will-call", "service_center":"ALB1", "customer_expected_date":"2015-07-25", "customer_po_num":"a", "items":"[[\"000000000000029709\",1]]"}' http://localhost:4000/accounts/1000736/orders.json

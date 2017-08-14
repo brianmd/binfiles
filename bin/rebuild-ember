@@ -1,0 +1,7 @@
+#!/bin/sh
+npm uninstall -g ember-cli
+npm cache clean
+bower cache clean
+npm install -g ember-cli@0.2.0-beta.1
+#npm install -g ember-cli
+

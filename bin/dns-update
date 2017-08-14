@@ -1,0 +1,10 @@
+#!/bin/bash
+date
+source /home/bmd/.config/pw
+export DIGITALOCEAN_TOKEN="$DO_GRU_TOKEN"
+export NAME="@"
+DOMAIN=murphydye.com /home/bmd/bin/digitalocean-dns
+DOMAIN=risensavior.com /home/bmd/bin/digitalocean-dns
+DOMAIN=catholickindle.com /home/bmd/bin/digitalocean-dns
+DOMAIN=stmartins.us /home/bmd/bin/digitalocean-dns
+

@@ -1,0 +1,21 @@
+echo "at test prompt: mocha ./spec --require ./spec/helpers/chai.js --reporter spec"
+echo "   will attempt to copy to the clipboard ..."
+echo
+echo "mocha ./spec --require ./spec/helpers/chai.js --reporter spec" | pbcopy
+echo
+
+npm init
+echo "adding testing packages ..."
+npm install mocha -g
+npm install mocha chai sinon --save-dev
+
+echo "adding debug"
+npm install debug --save
+
+echo "adding koa"
+npm install koa --save
+npm install koa-file-server --save
+npm install koa-jwt --save
+npm install koa-json-mask --save
+npm install jsonwebtoken --save
+

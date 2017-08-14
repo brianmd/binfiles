@@ -1,0 +1,3 @@
+#!/bin/bash
+cp ~/Dropbox/summit/etc/direnv/localhost3000 .envrc
+direnv allow

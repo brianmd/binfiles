@@ -1,0 +1,31 @@
+#!/bin/bash
+# from destroy all software, season 1, episode 10: fast tests
+#set -e
+
+need_rails=1
+
+if [ $# -gt 0 ]; then
+  filename=$1
+  # Remove tailing line numbers from filename, e.g., spec/my_spect.rb:33
+  grep_filename=`echo $1 | sed 's/:.*$//g'`
+
+  (set +e ; grep -r '[^_]spec_helper' "$grep_filename") > /tmp/testitjunk
+  if [ $? -eq 1 ]; then
+    need_rails=''
+  else
+    echo 'some files requiring spec_helper.rb (which forces loading rails)'
+    head -3 /tmp/testitjunk
+    echo
+  fi
+else
+  filename='spec'
+fi
+
+command='rspec'
+
+if [ $need_rails ]; then
+  command="ruby -S bundle exec $command"
+fi
+
+echo "command: RAILS_ENV=test $command $filename"
+time RAILS_ENV=test $command $filename

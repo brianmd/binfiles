@@ -1,0 +1,15 @@
+#!/bin/sh
+echo "$0 localport remoteport monitorport"
+echo "remote uri:"
+echo
+echo "      ubkkb140d981.brianmd.koding.io:$2"
+echo
+echo
+# ssh -v -g -R 0.0.0.0:$2:localhost:$1 brianmd -N
+
+if [ $# = 3 ]; then
+    autossh -M $3 -v -g -R 0.0.0.0:$2:localhost:$1 brianmd -N
+else
+    echo "ex: tunnel 3000 22223 20000"
+fi
+

@@ -1,0 +1,2 @@
+#!/bin/sh
+redis-cli -h redis-md -p 11510 -a $REDISMD

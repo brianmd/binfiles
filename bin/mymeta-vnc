@@ -1,0 +1,3 @@
+#!/bin/sh
+meta-tunnel 5901 5901 25901
+

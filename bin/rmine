@@ -1,0 +1,3 @@
+#!/bin/sh
+cd ~/Documents/git/ruyadorno-redmine-terminal-18f2bc549f1c
+./redmine.py li

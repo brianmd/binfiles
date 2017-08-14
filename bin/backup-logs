@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'date'
+
+backup_dir = Pathname.new '/Volumes/amazon/summit/logs'
+log_dir = Pathname.new '/Volumes/bh/var/www/apps/blue-harvest/current/log'
+
+last_backed_up = backup_dir.entries.collect{|x| x.to_s}.select{|x| x.match(/^production.*gz$/)}.sort.last.split('.')[1]
+
+last_date = Date.strptime(last_backed_up, '%Y%m%d')
+puts last_date
+
+log_files = log_dir.children.select{|x| x.to_s.match(/^production.*gz$/)}
+puts log_files
+
+

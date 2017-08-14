@@ -1,0 +1,56 @@
+#!/bin/bash
+
+export MACHINE_NAME=testing5
+
+
+# docker-machine --driver digitalocean -h
+# machine files are at: ~/.docker/machine/machines (in case need to clean up for docker-machine ls)
+
+# important: will use ~/.ssh/id_rsa, and needs to be already authenticated via keychain.
+
+source ~/.config/pw
+
+export DIGITALOCEAN_SIZE=512mb
+# export DIGITALOCEAN_SIZE=1gb
+export DIGITALOCEAN_USER=root
+export DIGITALOCEAN_REGION=sfo2
+export DIGITALOCEAN_SSH_PORT=22
+export DIGITALOCEAN_IMAGE=ubuntu-16-04-x64
+export DIGITALOCEAN_SSH_KEY_FINGERPRINT="a9:ca:55:d6:84:3b:3c:31:92:ca:52:19:d1:ae:e5:1e"
+
+# export DIGITALOCEAN_
+
+docker-machine \
+  create \
+  --driver digitalocean \
+  --digitalocean-access-token $DO_TEST_TOKEN \
+  --digitalocean-ssh-key-fingerprint "$DIGITALOCEAN_SSH_KEY_FINGERPRINT" \
+  $MACHINE_NAME
+
+echo "Created machine:"
+echo $MACHINE_NAME
+
+docker-machine env $MACHINE_NAME
+eval $(docker-machine env $MACHINE_NAME)
+# docker-machine use $MACHINE_NAME   # not enabled in version 0.7.0?
+# to return to localhost for docker commands: docker-machine use -u
+
+echo "may use: docker-machine ssh $MACHINE_NAME"
+echo "   OR"
+echo "docker run redis   # which runs redis in a container on the remote machine"
+docker-machine ip $MACHINE_NAME
+
+
+# can do things like this:
+# docker-machine ssh $MACHINE_NAME apt-get update
+
+  # --generic-ssh-key=$HOME/.ssh/chrome \
+  # --digitalocean ubuntu-16-04-x64 \
+  # --digitalocean-region "sfo2" \
+  # --digitalocean-private-networking \
+  # --digitalocean-ssh-user "root" \
+  # --digitalocean-size "1gb" \
+  # --digitalocean-ssh-port "22" \
+# --swarm
+# --swarm-addr 192.168.0.1
+

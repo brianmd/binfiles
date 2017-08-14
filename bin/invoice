@@ -1,0 +1,5 @@
+#!/bin/sh
+# open http://bh:werilasf879d@papichulo.prod:8080/papichulo/accounts/$1/invoices/$2.json
+# open https://www.summit.com/store/accounts/$1/invoices/$2
+open https://www.summit.com/store/services/invoices#/accounts/$1/invoices/$2
+

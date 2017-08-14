@@ -1,0 +1,13 @@
+#!/bin/bash
+# see https://gist.github.com/renchap/c093702f06df69ba5cac
+if [[ $EUID -ne 0 ]]; then
+    echo "You must run this as root ..."
+    exit 1
+fi
+
+export DOMAINS="-d murphydye.com -d www.murphydye.com -d meta.murphydye.com -d alexa.murphydye.com"
+export DIR=/tmp/letsencrypt-auto
+#mkdir -p $DIR && letsencrypt certonly --server https://acme-v01.api.letsencrypt.org/directory -a webroot --webroot-path=$DIR --agree-dev-preview $DOMAINS
+# mkdir -p $DIR && letsencrypt certonly --server https://acme-v01.api.letsencrypt.org/directory -a webroot --webroot-path=$DIR --renew-by-default $DOMAINS
+mkdir -p $DIR && letsencrypt certonly --server https://acme-v01.api.letsencrypt.org/directory -a webroot --webroot-path=$DIR $DOMAINS
+systemctl reload nginx

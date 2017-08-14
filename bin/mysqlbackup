@@ -1,0 +1,8 @@
+#!/bin/sh
+cd /git/mysqlbackup
+
+/usr/local/bin/mysqldump -h mysql.prod --routines --opt --skip-dump-date --databases blue_harvest_production | sed 's/),(/),\
+(/g' > blue_harvest_prod.sql
+
+git add .
+git commit -m 'latest data'

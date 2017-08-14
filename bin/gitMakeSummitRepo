@@ -1,0 +1,4 @@
+#!/bin/bash
+ssh git "mkdir repos/$1.git"
+ssh git "cd repos/$1.git ; git --bare init"
+

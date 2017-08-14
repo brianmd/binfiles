@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh blue-harvest.prod 'tail -f /var/www/apps/blue-harvest/current/log/production.log | grep "No such page\|Started GET"'

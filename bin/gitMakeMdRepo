@@ -1,0 +1,4 @@
+#!/bin/bash
+ssh murphydye.com "mkdir webapps/git2/repos/$1.git"
+ssh murphydye.com "cd webapps/git2/repos/$1.git ; git --bare init"
+#ssh murphydye.com "git config http.receivepack true"

@@ -1,0 +1,322 @@
+version: "2.1"
+
+services:
+  ecommerce.blue-harvest-database:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: "${ECOMMERCE_BLUE_HARVEST_DATABASE_DATABASE:-blue-harvest}"
+      MYSQL_USER: "${ECOMMERCE_BLUE_HARVEST_DATABASE_USER:-blue-harvest-user}"
+      MYSQL_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_DATABASE_PASSWORD:-blue-harvest-password}"
+      MYSQL_ROOT_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_DATABASE_ROOT_PASSWORD:-blue-harvest-root-password}"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ecommerce.volume.blue-harvest-database-initdb:/docker-entrypoint-initdb.d
+      - ecommerce.volume.blue-harvest-database:/var/lib/mysql
+    networks:
+      - ecommerce
+
+  ecommerce.wordpress-database:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: "${ECOMMERCE_WORDPRESS_DATABASE_DATABASE:-wordpress}"
+      MYSQL_USER: "${ECOMMERCE_WORDPRESS_DATABASE_USER:-wordpress-user}"
+      MYSQL_PASSWORD: "${ECOMMERCE_WORDPRESS_DATABASE_PASSWORD:-wordpress-password}"
+      MYSQL_ROOT_PASSWORD: "${ECOMMERCE_WORDPRESS_DATABASE_ROOT_PASSWORD:-wordpress-root-password}"
+    ports:
+      - "3307:3306"
+    volumes:
+      - ecommerce.volume.wordpress-database-initdb:/docker-entrypoint-initdb.d
+      - ecommerce.volume.wordpress-database:/var/lib/mysql
+    networks:
+      - ecommerce
+
+  ecommerce.ssp-database:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: "${ECOMMERCE_SSP_DATABASE_DATABASE:-ssp}"
+      MYSQL_USER: "${ECOMMERCE_SSP_DATABASE_USER:-ssp-user}"
+      MYSQL_PASSWORD: "${ECOMMERCE_SSP_DATABASE_PASSWORD:-ssp-password}"
+      MYSQL_ROOT_PASSWORD: "${ECOMMERCE_SSP_DATABASE_ROOT_PASSWORD:-ssp-root-password}"
+    ports:
+      - "3308:3306"
+    volumes:
+      - ecommerce.volume.ssp-database-initdb:/docker-entrypoint-initdb.d
+      - ecommerce.volume.ssp-database:/var/lib/mysql
+    networks:
+      - ecommerce
+
+  ecommerce.redis:
+    image: redis
+    command: [redis-server, --appendonly, "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ecommerce.volume.redis:/data
+    networks:
+      - ecommerce
+
+  ecommerce.memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+    networks:
+      - ecommerce
+
+  ecommerce.elasticsearch:
+    image: elasticsearch:2.4.3-alpine
+    command: [-Des.node.name="blue-harvest", -Des.cluster.name="ek"]
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ecommerce.volume.elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - ecommerce
+
+  ecommerce.elasticsearch-kopf:
+    image: lmenezes/elasticsearch-kopf
+    depends_on:
+      - ecommerce.elasticsearch
+    environment:
+      KOPF_SERVER_NAME: "${ECOMMERCE_ELASTICSEARCH_KOPF_SERVER_NAME:-ecommerce-elasticsearch-kopf}"
+      KOPF_ES_SERVERS: "${ECOMMERCE_ELASTICSEARCH_KOPF_ES_SERVERS:-ecommerce.elasticsearch:9200}"
+    ports:
+      - "9380:80"
+    networks:
+      - ecommerce
+
+  ecommerce.haystack:
+    build: ./haystack
+    command: [lein, run]
+    depends_on:
+      - ecommerce.elasticsearch
+      - ecommerce.blue-harvest-database
+    environment:
+      ELASTICSEARCH_URL: "${ECOMMERCE_HAYSTACK_ELASTICSEARCH_URL:-http://ecommerce.elasticsearch:9200}"
+      ELASTICLOG_URL: "${ECOMMERCE_HAYSTACK_ELASTICLOG_URL:-http://ecommerce.elasticsearch:9200}"
+      ELASTICLOG_INDEX: "${ECOMMERCE_HAYSTACK_ELASTICLOG_INDEX:-event}"
+      ELASTICLOG_TYPE: "${ECOMMERCE_HAYSTACK_ELASTICLOG_TYPE:-haystack_prod_1}"
+      DB_HOST: "${ECOMMERCE_HAYSTACK_DATABASE_URL:-//ecommerce.blue-harvest-database:3306/blue-harvest}"
+      DB_USER: "${ECOMMERCE_HAYSTACK_DATABASE_USER:-blue-harvest-user}"
+      DB_PW: "${ECOMMERCE_HAYSTACK_DATABASE_PASSWORD:-blue-harvest-password}"
+    ports:
+      - "9280:8080"
+    volumes:
+      - ./haystack:/usr/src/app
+    working_dir: /usr/src/app
+    networks:
+      - ecommerce
+
+  ecommerce.statsd:
+    image: hopsoft/graphite-statsd
+    ports:
+      - "8180:80"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024"
+      - "8125:8125/udp"
+      - "8126:8126"
+    networks:
+      - ecommerce
+
+  ecommerce.blue-harvest:
+    build: ./blue-harvest
+    command: [bundle, exec, rails, server]
+    depends_on:
+      - ecommerce.statsd
+      - ecommerce.redis
+      - ecommerce.memcached
+      - ecommerce.haystack
+      - ecommerce.blue-harvest-database
+      - ecommerce.wordpress-nginx
+      - ecommerce.ssp-nginx
+    environment:
+      BLUE_HARVEST_DEVELOP_HOST: "${ECOMMERCE_BLUE_HARVEST_BLUE_HARVEST_DEVELOP_HOST:-ecommerce.blue-harvest-database}"
+      BLUE_HARVEST_DEVELOP_DATABASE: "${ECOMMERCE_BLUE_HARVEST_BLUE_HARVEST_DEVELOP_DATABASE:-blue-harvest}"
+      BLUE_HARVEST_DEVELOP_USERNAME: "${ECOMMERCE_BLUE_HARVEST_BLUE_HARVEST_DEVELOP_USERNAME:-blue-harvest-user}"
+      BLUE_HARVEST_DEVELOP_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_BLUE_HARVEST_DEVELOP_PASSWORD:-blue-harvest-password}"
+      WORDPRESS_DEVELOP_HOST: "${ECOMMERCE_BLUE_HARVEST_WORDPRESS_DEVELOP_HOST:-ecommerce.wordpress-database}"
+      WORDPRESS_DEVELOP_DATABASE: "${ECOMMERCE_BLUE_HARVEST_WORDPRESS_DEVELOP_DATABASE:-wordpress}"
+      WORDPRESS_DEVELOP_USERNAME: "${ECOMMERCE_BLUE_HARVEST_WORDPRESS_DEVELOP_USERNAME:-wordpress-user}"
+      WORDPRESS_DEVELOP_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_WORDPRESS_DEVELOP_PASSWORD:-wordpress-password}"
+      FORMSCAPE_HOST: "${ECOMMERCE_BLUE_HARVEST_FORMSCAPE_HOST:-summit-sql.insummit.com}"
+      FORMSCAPE_DATABASE: "${ECOMMERCE_BLUE_HARVEST_FORMSCAPE_DATABASE:-Formscape}"
+      FORMSCAPE_USERNAME: "${ECOMMERCE_BLUE_HARVEST_FORMSCAPE_USERNAME:-dbo}"
+      FORMSCAPE_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_FORMSCAPE_PASSWORD:-db0p@ssw0rd}"
+      SMTP_ADDRESS: "${ECOMMERCE_BLUE_HARVEST_SMTP_ADDRESS:-default}"
+      SMTP_USER_NAME: "${ECOMMERCE_BLUE_HARVEST_SMTP_USER_NAME:-default}"
+      SMTP_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_SMTP_PASSWORD:-default}"
+      CREDIT_REPORT_EMAIL_ADDR: "${ECOMMERCE_BLUE_HARVEST_CREDIT_REPORT_EMAIL_ADDR:-default}"
+      CREDIT_SUMMARY_EMAIL_ADDR: "${ECOMMERCE_BLUE_HARVEST_CREDIT_SUMMARY_EMAIL_ADDR:-default}"
+      VELOCITY_APPLICATION_ID: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_APPLICATION_ID:-default}"
+      VELOCITY_DEVELOP_APPLICATION_ID: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_DEVELOP_APPLICATION_ID:-default}"
+      VELOCITY_PRODUCTION_APPLICATION_ID: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_PRODUCTION_APPLICATION_ID:-default}"
+      VELOCITY_TEST_APPLICATION_ID: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_TEST_APPLICATION_ID:-default}"
+      VELOCITY_APPLICATION_URL: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_APPLICATION_URL:-default}"
+      VELOCITY_DEVELOP_APPLICATION_URL: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_DEVELOP_APPLICATION_URL:-default}"
+      VELOCITY_PRODUCTION_APPLICATION_URL: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_PRODUCTION_APPLICATION_URL:-default}"
+      VELOCITY_TEST_APPLICATION_URL: "${ECOMMERCE_BLUE_HARVEST_VELOCITY_TEST_APPLICATION_URL:-default}"
+      REDIS_MAIL_QUEUE: "${ECOMMERCE_BLUE_HARVEST_REDIS_MAIL_QUEUE:-queue}"
+      QUEUE: "${ECOMMERCE_BLUE_HARVEST_QUEUE:-queue}"
+      BLUE_HARVEST_SERVER: "${ECOMMERCE_BLUE_HARVEST_SERVER:-ecommerce.blue-harvest:3000}"
+      BLUE_HARVEST_POOL: "${ECOMMERCE_BLUE_HARVEST_POOL:-5}"
+      BLUE_HARVEST_HOST: "${ECOMMERCE_BLUE_HARVEST_HOST:-ecommerce.blue-harvest-database}"
+      BLUE_HARVEST_USERNAME: "${ECOMMERCE_BLUE_HARVEST_USERNAME:-blue-harvest-user}"
+      BLUE_HARVEST_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_PASSWORD:-blue-harvest-password}"
+      BLUE_HARVEST_ES_URL: "${ECOMMERCE_BLUE_HARVEST_BLUE_HARVEST_ES_URL:-http://ecommerce.haystack:8080/api/v2/search}"
+      BLUE_HARVEST_SOLR_URL: "${ECOMMERCE_BLUE_HARVEST_SOLR_URL:-default}"
+      PAPICHULO_HOST: "${ECOMMERCE_BLUE_HARVEST_PAPICHULO_HOST:-ecommerce.papichulo:4000}"
+      PAPICHULO_URL: "${ECOMMERCE_BLUE_HARVEST_PAPICHULO_URL:-http://ecommerce.papichulo:4000}"
+      PAPICHULO_PASSWORD: "${ECOMMERCE_BLUE_HARVEST_PAPICHULO_PASSWORD:-password}"
+      PAPICHULO_TIMEOUT: "${ECOMMERCE_BLUE_HARVEST_PAPICHULO_TIMEOUT:-8}"
+      STATSD_HOST: "${ECOMMERCE_BLUE_HARVEST_STATSD_HOST:-ecommerce.statsd}"
+      STATSD_PORT: "${ECOMMERCE_BLUE_HARVEST_STATSD_PORT:-8125}"
+      MEMCACHED_SERVERS: "${ECOMMERCE_BLUE_HARVEST_MEMCACHED_SERVERS:-ecommerce.memcached}"
+      MONGO_SERVER: "${ECOMMERCE_BLUE_HARVEST_MONGO_SERVER:-default}"
+      REDIS_SERVER: "${ECOMMERCE_BLUE_HARVEST_REDIS_SERVER:-ecommerce.redis}"
+      ECOMMERCE_BLUE_HARVEST_WORDPRESS_URL: "${ECOMMERCE_BLUE_HARVEST_WORDPRESS_URL:-http://ecommerce.wordpress-nginx/api}"
+      ECOMMERCE_BLUE_HARVEST_SSP_API_KEY: "${ECOMMERCE_BLUE_HARVEST_SSP_API_KEY:-local-0ff623a8a48c9ecc6b095def793c0c70}"
+      ECOMMERCE_BLUE_HARVEST_SSP_URL: "${ECOMMERCE_BLUE_HARVEST_SSP_URL:-ecommerce.ssp-nginx}"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./blue-harvest:/usr/src/app
+    working_dir: /usr/src/app
+    networks:
+      - ecommerce
+
+  ecommerce.papichulo:
+    build: ./papichulo
+    command: [bundle, exec, rails, server, puma]
+    depends_on:
+      - ecommerce.redis
+    environment:
+      DYLD_LIBRARY_PATH: "/usr/src/lib"
+      CLASSPATH: "/usr/src/lib:/usr/src/app"
+      PAPICHULO_PASSWORD: "${ECOMMERCE_PAPICHULO_PASSWORD:-password}"
+      IT_PAPICHULO_PASSWORD: "${ECOMMERCE_PAPICHULO_IT_PASSWORD:-it-password}"
+      REDIS_SERVER: "${ECOMMERCE_PAPICHULO_REDIS_URL:-ecommerce.redis:6379}"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./papichulo:/usr/src/app
+      - ./papichulo/.sapjco-3.0.8-linux-x86-64bit:/usr/src/lib
+    working_dir: /usr/src/app
+    networks:
+      - ecommerce
+
+  ecommerce.wordpress:
+    image: wordpress:php7.1-fpm-alpine
+    depends_on:
+      - ecommerce.wordpress-database
+    environment:
+      WORDPRESS_DB_HOST: "${ECOMMERCE_WORDPRESS_DB_HOST:-ecommerce.wordpress-database}"
+      WORDPRESS_DB_USER: "${ECOMMERCE_WORDPRESS_DB_USER:-wordpress-user}"
+      WORDPRESS_DB_PASSWORD: "${ECOMMERCE_WORDPRESS_DB_PASSWORD:-wordpress-password}"
+      WORDPRESS_DB_NAME: "${ECOMMERCE_WORDPRESS_DB_NAME:-wordpress}"
+      WORDPRESS_TABLE_PREFIX: "${ECOMMERCE_WORDPRESS_TABLE_PREFIX:-wp_}"
+    volumes:
+      - ecommerce.volume.wordpress:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - ecommerce
+
+  ecommerce.wordpress-nginx:
+    image: atsjj/nginx:1.11.5-alpine
+    depends_on:
+      - ecommerce.wordpress
+    environment:
+      FASTCGI_SERVER_HOST: "${ECOMMERCE_WORDPRESS_NGINX_FASTCGI_SERVER_HOST:-ecommerce.wordpress:9000}"
+    ports:
+      - "3080:80"
+    volumes_from:
+      - ecommerce.wordpress:ro
+    working_dir: /var/www/html
+    networks:
+      - ecommerce
+
+  ecommerce.ssp:
+    image: atsjj/ssp:1.5.4.10265-php5.3.29-fpm-alpine
+    depends_on:
+      - ecommerce.ssp-database
+    environment:
+      SSP_MYSQL_HOST: "${ECOMMERCE_SSP_MYSQL_HOST:-ecommerce.ssp-database}"
+      SSP_MYSQL_DATABASE: "${ECOMMERCE_SSP_MYSQL_DATABASE:-ssp}"
+      SSP_MYSQL_USER: "${ECOMMERCE_SSP_MYSQL_USER:-ssp-user}"
+      SSP_MYSQL_PASSWORD: "${ECOMMERCE_SSP_MYSQL_PASSWORD:-ssp-password}"
+      SSP_MYSQL_TABLE_PREFIX: "${ECOMMERCE_SSP_TABLE_PREFIX:-ssp_}"
+      SSP_RANDOM_SALT: "${ECOMMERCE_SSP_RANDOM_SALT:-yes}"
+    volumes:
+      - ecommerce.volume.ssp:/var/www/html
+    networks:
+      - ecommerce
+
+  ecommerce.ssp-nginx:
+    image: atsjj/nginx:1.11.5-alpine
+    depends_on:
+      - ecommerce.ssp
+    environment:
+      FASTCGI_SERVER_HOST: "${ECOMMERCE_SSP_NGINX_FASTCGI_SERVER_HOST:-ecommerce.ssp:9000}"
+    ports:
+      - "3081:80"
+    volumes_from:
+      - ecommerce.ssp:ro
+    working_dir: /var/www/html
+    networks:
+      - ecommerce
+
+  # ecommerce.resque-web:
+  #   image: atsjj/resque-web:0.0.9-ruby2.4.0-alpine
+  #   depends_on:
+  #     - ecommerce.redis
+  #   environment:
+  #     NAMESPACE: "${ECOMMERCE_RESQUE_WEB_NAMESPACE:-queue}"
+  #     RAILS_RESQUE_REDIS: "${ECOMMERCE_RESQUE_WEB_RAILS_RESQUE_REDIS:-ecommerce.redis:6379}"
+  #   ports:
+  #     - "6380:80"
+  #   networks:
+  #     - ecommerce
+
+  # ecommerce.data:
+  #   image: atsjj/rsync:latest
+  #   command: [rsync, -aHAXv, /mnt/ecommerce.ssp-database-initdb/, /srv/ecommerce.volume.ssp-database-initdb/]
+  #   command: [ping, -q, localhost]
+  #   volumes:
+  #     - ./blue-harvest-database/data:/mnt/ecommerce.blue-harvest-database:ro
+  #     - ./blue-harvest-database/docker-entrypoint-initdb.d:/mnt/ecommerce.blue-harvest-database-initdb:ro
+  #     - ./elasticsearch/data:/mnt/ecommerce.elasticsearch:ro
+  #     - ./redis/data:/mnt/ecommerce.redis:ro
+  #     - ./ssp-database/data:/mnt/ecommerce.ssp-database:ro
+  #     - ./ssp-database/docker-entrypoint-initdb.d:/mnt/ecommerce.ssp-database-initdb:ro
+  #     - ./ssp:/mnt/ecommerce.ssp:ro
+  #     - ./wordpress-database/data:/mnt/ecommerce.wordpress-database:ro
+  #     - ./wordpress-database/docker-entrypoint-initdb.d:/mnt/ecommerce.wordpress-database-initdb:ro
+  #     - ./wordpress:/mnt/ecommerce.wordpress:ro
+  #     - ecommerce.volume.blue-harvest-database-initdb:/srv/ecommerce.volume.blue-harvest-database-initdb
+  #     - ecommerce.volume.blue-harvest-database:/srv/ecommerce.volume.blue-harvest-database
+  #     - ecommerce.volume.elasticsearch:/srv/ecommerce.volume.elasticsearch
+  #     - ecommerce.volume.redis:/srv/ecommerce.volume.redis
+  #     - ecommerce.volume.ssp-database-initdb:/srv/ecommerce.volume.ssp-database-initdb
+  #     - ecommerce.volume.ssp-database:/srv/ecommerce.volume.ssp-database
+  #     - ecommerce.volume.ssp:/srv/ecommerce.volume.ssp
+  #     - ecommerce.volume.wordpress-database-initdb:/srv/ecommerce.volume.wordpress-database-initdb
+  #     - ecommerce.volume.wordpress-database:/srv/ecommerce.volume.wordpress-database
+  #     - ecommerce.volume.wordpress:/srv/ecommerce.volume.wordpress
+  #   networks:
+  #     - ecommerce
+
+networks:
+  ecommerce:
+    driver: bridge
+
+volumes:
+  ecommerce.volume.blue-harvest-database-initdb: {}
+  ecommerce.volume.blue-harvest-database: {}
+  ecommerce.volume.elasticsearch: {}
+  ecommerce.volume.redis: {}
+  ecommerce.volume.ssp-database-initdb: {}
+  ecommerce.volume.ssp-database: {}
+  ecommerce.volume.ssp: {}
+  ecommerce.volume.wordpress-database-initdb: {}
+  ecommerce.volume.wordpress-database: {}
+  ecommerce.volume.wordpress: {}
