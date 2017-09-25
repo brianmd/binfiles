@@ -28,7 +28,7 @@ help(){
 }
 
 add(){
-  gh-auth add --users $@ --command="$(which tmux) attach -t pairing"
+  gh-auth add --users "$@" --command="$(which tmux) attach -t pairing"
 }
 
 rm(){
