@@ -1,0 +1,7 @@
+#!/bin/bash
+# might need to install
+# yum install yum-utils
+package-cleanup --oldkernels --count=2
+
+# note: should put this into /etc/yum.conf
+# installonly_limit=2

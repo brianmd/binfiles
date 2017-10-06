@@ -1,0 +1,17 @@
+#!/bin/bash
+# -L: local port forward
+# localport: endingServer:endingPort middleServer
+#ssh -L 3000:localhost:3000 209.15.6.114
+case $1 in
+    chronograf)
+        ssh -AYL 8888:192.168.0.220:8888 bmd@meta
+        ;;
+    *)
+        echo "Usage: $0 chronograf"
+        echo $1
+        exit 1
+        ;;
+esac
+
+
+
