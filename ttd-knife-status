@@ -1,0 +1,4 @@
+#!/bin/bash
+knife status --hide-by-mins 75 > /tmp/knife-status
+grep -E '(cit|aip)' /tmp/knife-status
+
