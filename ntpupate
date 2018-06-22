@@ -1,0 +1,5 @@
+#!/bin/sh
+# https://www.thegeekdiary.com/centos-rhel-6-how-to-force-a-ntp-sync-with-the-ntp-servers/
+# -g – requests an update irrespective of the time offset
+# -q – requests the daemon to quit after updating the date from the ntp server.
+systemctl stop ntpd && ntpd -gq && systemctl start ntpd
