@@ -1,5 +1,6 @@
 #!/bin/sh
 # http://iamvery.com/2013/11/16/tmux-pairing-anywhere-on-your-box.html
+# if pairing user is unable to connect directly to this computer, use: ngrok tcp 22
 
 command=$(basename $0)
 
