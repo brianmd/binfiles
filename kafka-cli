@@ -1,2 +1,5 @@
 #!/bin/sh
-docker run --rm -it --net=host landoop/fast-data-dev bash
+echo '
+kafka-topics --zookeeper 192.186.1.220:2181 --topic first_topic --partitions 3 --replication-factor 1 --create
+'
+docker run --rm -it --net=host -e ADV_HOST=192.168.1.220 landoop/fast-data-dev bash
