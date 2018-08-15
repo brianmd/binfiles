@@ -1,0 +1,2 @@
+#!/bin/bash
+asinfo -v 'histogram:namespace=ttd-user;type=ttl' -l
