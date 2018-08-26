@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /media/bmd/plex/plex/movies
+rsync -azP talos:private/transmission/data .
