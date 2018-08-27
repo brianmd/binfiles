@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "$(date)  $*" >>~/Dropbox/home/logit
+echo "$(date)  $*" >>~/code/logit
