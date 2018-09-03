@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "$(date)  $*" >>~/code/logit
+echo "$(date)  $*" >>~/code/logit.org

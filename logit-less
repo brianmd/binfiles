@@ -1,0 +1,2 @@
+#!/bin/sh
+less +G ~/code/logit.org
