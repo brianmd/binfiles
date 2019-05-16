@@ -1,2 +1,7 @@
 #!/bin/sh
-less +G ~/code/logit.org
+# dir="$HOME/drop/notes"
+# d=`date +%Y/%m`
+# fulldir="$dir/$d"
+# filename="$fulldir/log.org"
+# less +G "$filename"
+less +G `logit-filename`
