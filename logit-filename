@@ -2,5 +2,6 @@
 dir="$HOME/drop/notes"
 d=`date +%Y/%m`
 fulldir="$dir/$d"
+mkdir -p $fulldir
 filename="$fulldir/log.org"
 echo "$filename"

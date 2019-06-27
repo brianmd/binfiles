@@ -1,0 +1,2 @@
+#!/bin/bash
+(scutil --nc status "Boulder" | grep Connected) ||networksetup -connectpppoeservice "Boulder"
