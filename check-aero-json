@@ -1,0 +1,2 @@
+#!/bin/bash
+for f in aerospike-*.json; do echo -n "$f "; check-json $f; done
