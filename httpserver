@@ -1,2 +1,3 @@
 #!/bin/bash
-python -m SimpleHTTPServer 8081
+#python -m SimpleHTTPServer 8080
+ruby -run -e httpd . --port 8080
