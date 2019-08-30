@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /usr/local/Cellar/mosh/1.3.2_8/bin/mosh-server
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /usr/local/Cellar/mosh/1.3.2_8/bin/mosh-server
+
