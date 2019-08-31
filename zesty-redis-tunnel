@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -L 6378:localhost:6379 zesty-hardwired
