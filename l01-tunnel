@@ -1,0 +1,4 @@
+#!/bin/bash
+ # ssh -4 -g -R 0.0.0.0:3005:localhost:22 l01
+ ssh -g -R 0.0.0.0:3005:localhost:22 l01
+
