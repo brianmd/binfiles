@@ -1,2 +1,3 @@
 #!/bin/bash
+echo "reports the json length of $1, or reports an error if json is invalid"
 cat $1 | jq 'length'
