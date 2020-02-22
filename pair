@@ -23,7 +23,8 @@ help(){
   echo "    add  Add a github user"
   echo "    rm   Remove a github user"
   echo "    ls   List github users"
-  echo "    up   Open shared tmux session"
+  echo "    up   Open shared tmux session AND attach"
+  echo "    connect   Same as 'up' without attaching"
   echo "    ssh  Start a reverse tunnel for pair sharing"
   echo "         See: https://ngrok.com"
   echo "    tunnels List existing tunnels"
@@ -44,19 +45,29 @@ ls(){
 }
 
 up(){
+  connect $@
+  tmux attach
+}
+
+connect(){
   # Add any users, if specified
   if [[ ! -z $@ ]]; then
     add $@
   fi
 
-  tmux new-session -d -s pairing "ng connect"
+  if [[ ! $(ps aux | grep 'ng connect$') ]]; then
+    tmux new-session -d -s pairing "ng connect"
+  else
+    echo "already running"
+  fi
   tmux split-window
   sleep 0.5 # some delay so tunnel has time to get up
-  tmux send-keys "pair ssh" C-m
-  tmux attach
+  tmux send-keys "ngrok-tunnels" C-m
+  ngrok-tunnels
 }
 
 tunnels(){
+  # this curl command is also in ngrok-tunnels
   curl -s localhost:4040/api/tunnels | jq '.["tunnels"][]["public_url"]'
 }
 
