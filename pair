@@ -26,6 +26,7 @@ help(){
   echo "    up   Open shared tmux session"
   echo "    ssh  Start a reverse tunnel for pair sharing"
   echo "         See: https://ngrok.com"
+  echo "connecting command: ssh -p <port> $(whoami)@<ngrok-server>"
 }
 
 add(){
