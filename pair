@@ -57,12 +57,12 @@ connect(){
 
   if [[ ! $(ps aux | grep 'ng connect$') ]]; then
     tmux new-session -d -s pairing "ng connect"
+    tmux split-window -t pairing.0
+    sleep 0.5 # some delay so tunnel has time to get up
+    tmux send-keys -t pairing.1 "ngrok-tunnels" C-m
   else
     echo "already running"
   fi
-  tmux split-window
-  sleep 0.5 # some delay so tunnel has time to get up
-  tmux send-keys "ngrok-tunnels" C-m
   ngrok-tunnels
 }
 
