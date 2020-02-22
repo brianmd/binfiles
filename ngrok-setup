@@ -1,3 +1,4 @@
 #!/bin/sh
-brew install ngrok reattach-to-user-namespace
-ngrok authtoken $GROK_TOKEN
+brew cask install ngrok
+brew install reattach-to-user-namespace
+ngrok authtoken $NGROK_TOKEN
