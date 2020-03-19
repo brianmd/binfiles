@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "this connects port 4444 of bionic to port 443 of dash.adsrvr.org"
+echo "from your computer, run thru-bionic-to-dashboard (if you have bionic in your hosts file)"
+echo "  or sudo ssh -i /Users/brianmurphy-dye/.ssh/chrome -L 127.0.0.1:443:127.0.0.1:4444 brian.murphy-dye@192.168.1.211"
+echo "  if elsewhere (may need to change 192.168.1.211 to ngrok address)"
+socat tcp-l:4444,fork,reuseaddr tcp:dash.adsrvr.org:443

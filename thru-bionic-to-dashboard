@@ -1,0 +1,3 @@
+#!/bin/sh
+sudo ssh -i /Users/brianmurphy-dye/.ssh/chrome -L 127.0.0.1:443:127.0.0.1:4444 brian.murphy-dye@192.168.1.211
+
