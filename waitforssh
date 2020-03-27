@@ -1,0 +1,5 @@
+#!/bin/sh
+while ! `nc -L 5  -G 1 -z $1 22`; do echo "  no ssh on $1 yet"; done
+echo
+echo "ssh is running on $1"
+
