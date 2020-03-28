@@ -1,5 +1,13 @@
-#!/bin/sh
-while ! `nc -L 5  -G 1 -z $1 22`; do echo "  no ssh on $1 yet"; done
+#!/bin/bash
+while [[ $(nc -L 5  -G 10 -z $1 22) ]]
+do
+  echo -n '.'
+done
 echo
-echo "ssh is running on $1"
+echo "yay, ssh is running on $1"
+if [[ "$1" -eq "-y" ]]; then
+  ip="$1"
+  shift
+  ssh "$ip" "$@"
+fi
 

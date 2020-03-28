@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require_relative 'aws'
+
+# client = Aws::EC2::Client.new(region: region, credentials: creds)
+# i = ec2.instance('i-04dcea76d66bf89fc')
+# i.exists?
+# warn i.to_a.inspect
+
+name = ARGV[0]
+
+ec2 = AwsEc2.new
+instance = ec2.instance_named(name)
+# require 'yaml'
+# warn instance.to_yaml
+warn instance.instance_name
+warn
+
+instance.stop_instance
+

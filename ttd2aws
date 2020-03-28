@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require_relative 'aws'
+
+ec2 = AwsEc2.new
+ids = ARGV.collect do |name|
+  instance = ec2.instance_named(name)
+  "#{name}: #{instance.id}"
+end
+
+puts ids.join("\n")

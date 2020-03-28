@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require_relative 'aws'
+
+name = ARGV[0]
+
+ec2 = AwsEc2.new
+instance = ec2.instance_named(name)
+return_code =instance.start_instance
+warn "return_code: #{return_code}"
+case return_code
+when Aws::EC2::Types::StartInstancesResult
+  exit(0)
+when Integer
+  exit(return_code)
+when nil
+  exit(998)
+end
