@@ -1,10 +1,18 @@
 #!/usr/bin/env ruby
 require_relative 'aws'
 
+name = ARGV[0]
+region = ARGV[1] || 'us-east-1'
+
+# instance = Aws::EC2::Resource.ttd_instance(name, region)
+
 ec2 = AwsEc2.new
 ids = ARGV.collect do |name|
   instance = ec2.instance_named(name)
+  # warn instance.state.inspect, instance.instance_state.inspect, instance.state.name.inspect, instance.private_ip_address, instance.state_reason, instance.instance_type, instance.instance_lifecycle
   "#{name}: #{instance.id}"
 end
 
-puts ids.join("\n")
+result = ids.join("\n")
+warn result
+result

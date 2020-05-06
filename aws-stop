@@ -1,19 +1,22 @@
 #!/usr/bin/env ruby
 require_relative 'aws'
 
-# client = Aws::EC2::Client.new(region: region, credentials: creds)
-# i = ec2.instance('i-04dcea76d66bf89fc')
-# i.exists?
-# warn i.to_a.inspect
-
 name = ARGV[0]
+region = ARGV[1] || 'us-east-1'
 
-ec2 = AwsEc2.new
-instance = ec2.instance_named(name)
-# require 'yaml'
-# warn instance.to_yaml
-warn instance.instance_name
-warn
-
-instance.stop_instance
-
+instance = Aws::EC2::Resource.ttd_instance(name, region)
+while true
+  begin
+    warn Time.now
+    instance.stop_instance
+    warn "\n\nwaiting until stopped"
+    # default delay is 15 seconds, but we get 'Request limit exceeded' errors occasionally
+    instance.wait_until_stopped(delay: 120)
+    break
+  rescue => e
+    warn "\n\nerror while stopping instance: #{e.class} #{e}"
+    warn '  most often seen in #wait_until_stopped'
+    warn e.backtrace.join("\n")
+    warn "\nsleeping 2 minutes and retrying stop"
+  end
+end

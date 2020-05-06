@@ -1,13 +1,20 @@
 #!/bin/bash
-while [[ $(nc -L 5  -G 10 -z $1 22) ]]
-do
+while true; do
+  if $(nc -L 5  -G 10 -z $1 22); then
+    break
+  fi
   echo -n '.'
+  sleep 2
 done
+
 echo
 echo "yay, ssh is running on $1"
-if [[ "$1" -eq "-y" ]]; then
+if [[ "$#" -gt 1 ]]; then
   ip="$1"
   shift
+  sleep 20 # a little buffer just in case
   ssh "$ip" "$@"
+else
+  test -x /usr/bin/say && say connected
 fi
 

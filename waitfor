@@ -1,0 +1,10 @@
+#!/bin/bash
+while true; do
+  if $(nc -L 5  -G 10 -z $1 $2); then
+    break
+  fi
+  echo -n '.'
+  sleep 2
+done
+echo "connected on port $2"
+test -x /usr/bin/say && say "connected on port $2"

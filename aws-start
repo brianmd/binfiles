@@ -2,16 +2,10 @@
 require_relative 'aws'
 
 name = ARGV[0]
+region = ARGV[1] || 'us-east-1'
 
-ec2 = AwsEc2.new
-instance = ec2.instance_named(name)
-return_code =instance.start_instance
-warn "return_code: #{return_code}"
-case return_code
-when Aws::EC2::Types::StartInstancesResult
-  exit(0)
-when Integer
-  exit(return_code)
-when nil
-  exit(998)
-end
+instance = Aws::EC2::Resource.ttd_instance(name, region)
+warn Time.now
+instance.start_instance
+warn "\n\nwaiting until running ..."
+instance.wait_until_running(delay: 120)
