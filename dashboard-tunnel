@@ -1,2 +1,4 @@
 #!/bin/bash
-ssh -L 127.0.0.1:4443:dash.adsrvr.org:443 zesty-hardwired
+# ssh -L 127.0.0.1:4443:dash.adsrvr.org:443 zesty-hardwired
+# ssh -L 127.0.0.1:4443:10.100.46.102:443 zesty-hardwired
+ssh -L 127.0.0.1:443:10.100.46.102:443 bionic

@@ -1,3 +1,10 @@
 #!/bin/sh
-sudo ssh -i /Users/brianmurphy-dye/.ssh/chrome -L 127.0.0.1:443:127.0.0.1:4444 brian.murphy-dye@192.168.1.211
+# note: should add '127.0.0.1 dash.adsrvr.org' to your hosts file, to enable using dashboard with normal urls
+echo "you may be asked to enter your sudo password for ${USER}@`hostname`"
+
+# this version requires socat to be running on bionic (see bionic-to-dashboard in binfiles)
+# sudo ssh -i /Users/brianmurphy-dye/.ssh/chrome -L 127.0.0.1:443:127.0.0.1:4444 brian.murphy-dye@192.168.1.211
+
+# this version is better because it is self sufficient
+sudo ssh -i /Users/brianmurphy-dye/.ssh/chrome -L 127.0.0.1:443:10.100.46.102:443 brian.murphy-dye@192.168.1.211
 
