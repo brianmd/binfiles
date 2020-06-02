@@ -4,7 +4,8 @@ cd ~/code/chef/cookbooks
 for cookbook in `\ls`; do
   echo $cookbook
   cd ~/code/chef/cookbooks/${cookbook}
-  for vm in `kitchen list | grep -v 'Not Created' | grep Created | awk '{print $1}'`; do
+  for vm in `kitchen list | grep -v 'Not Created' | grep ChefZero | awk '{print $1}'`; do
+    echo "  destroy $vm"
     kitchen destroy $vm
   done
 done
