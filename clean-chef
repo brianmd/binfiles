@@ -1,5 +1,4 @@
 #!/bin/sh
-# cd ~/code/chef/cookbooks; for i in `\ls`; do cd ~/code/chef/cookbooks/${i} && kitchen destroy & done
 cd ~/code/chef/cookbooks
 for cookbook in `\ls`; do
   echo $cookbook
@@ -9,5 +8,3 @@ for cookbook in `\ls`; do
     kitchen destroy $vm
   done
 done
-
-
