@@ -12,7 +12,7 @@ echo "yay, ssh is running on $1"
 if [[ "$#" -gt 1 ]]; then
   ip="$1"
   shift
-  sleep 20 # a little buffer just in case
+  sleep 5 # a little buffer just in case
   ssh "$ip" "$@"
 else
   test -x /usr/bin/say && say connected
