@@ -5,3 +5,8 @@ package-cleanup --oldkernels --count=2
 
 # note: should put this into /etc/yum.conf
 # installonly_limit=2
+#
+# $ mv /var/lib/rpm/__db* /tmp/
+# $ rpm --rebuilddb
+# $ yum clean all
+

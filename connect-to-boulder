@@ -1,2 +1,7 @@
 #!/bin/bash
-(scutil --nc status "Boulder" | grep Connected) ||networksetup -connectpppoeservice "Boulder"
+if [ ! -e "$HOME/.config/no-vpn" ]; then
+  (scutil --nc status "Boulder" | grep Connected) ||networksetup -connectpppoeservice "Boulder"
+# else
+#   echo "file 'no-vpn exists', skipping connecting"
+fi
+

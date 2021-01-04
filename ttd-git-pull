@@ -1,0 +1,39 @@
+#!/bin/bash
+cd ~/.emacs.d
+echo "pulling emacs.d"
+git pull --rebase
+
+cd ~/.config/dotfiles
+echo "pulling emacs.d"
+git pull --rebase
+
+cd ~/.config/binfiles
+echo "pulling emacs.d"
+git pull --rebase
+
+cd ~/code/reference/tdsi
+echo "pulling tdsi"
+pwd
+git pull --rebase
+
+cd ../adplatform
+echo "pulling adplatform"
+pwd
+git pull --rebase
+
+cd ../monitoring
+echo "pulling monitoring"
+pwd
+git pull --rebase
+
+cd ../monitoring-rules
+echo "pulling monitoring-rules"
+pwd
+git pull --rebase
+
+
+# problem here is have deleted .python-version
+# cd ~/code/ans/ttd-ansible
+# echo
+# pwd
+# git pull --rebase

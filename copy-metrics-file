@@ -1,0 +1,2 @@
+#!/bin/sh
+rsync -azP ~/code/mux/lib/mux/prometheus/metrics.yaml metabase:code/mux/lib/mux/prometheus/
