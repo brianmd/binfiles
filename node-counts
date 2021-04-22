@@ -1,0 +1,2 @@
+#!/bin/sh
+ttdops list nodes --state 2  --summary --groupby datacenter,role | ag cit-

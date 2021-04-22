@@ -1,0 +1,7 @@
+#!/bin/bash
+host=${1:-use-cit-cold001}
+localListenPort=${2:-4567}
+remoteConnectPort=${3:-4567}
+
+ autossh -g -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 0" -o "ExitOnForwardFailure=yes" -L 0.0.0.0:$localListenPort:127.0.0.1:$remoteConnectPort `ttdip $host`
+

@@ -1,32 +1,51 @@
 #!/bin/bash
 cd ~/.emacs.d
+echo
 echo "pulling emacs.d"
 git pull --rebase
 
 cd ~/.config/dotfiles
-echo "pulling emacs.d"
+echo
+echo "pulling dotfiles"
 git pull --rebase
 
 cd ~/.config/binfiles
-echo "pulling emacs.d"
+echo
+echo "pulling binfiles"
+git pull --rebase
+
+cd ~/code/cheff
+echo
+echo "pulling cheff"
+pwd
 git pull --rebase
 
 cd ~/code/reference/tdsi
+echo
 echo "pulling tdsi"
 pwd
 git pull --rebase
 
 cd ../adplatform
+echo
 echo "pulling adplatform"
 pwd
 git pull --rebase
 
 cd ../monitoring
+echo
 echo "pulling monitoring"
 pwd
 git pull --rebase
 
+cd ../albert.autin
+echo
+echo "pulling albert.autin"
+pwd
+git pull --rebase
+
 cd ../monitoring-rules
+echo
 echo "pulling monitoring-rules"
 pwd
 git pull --rebase
