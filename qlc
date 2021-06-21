@@ -1,7 +1,0 @@
-#!/bin/bash
-collapse='true'
-if [[ "$1" == "--no-collapse" ]]; then
-  collapse='false'
-  shift
-fi
-curl -G -s 'http://10.100.56.216:8080/api.yaml' --data-urlencode "collapse=$collapse" --data-urlencode "query=$1"

@@ -4,6 +4,10 @@
 
 KEYFILE=${HOME}/.ssh/ttd-vault
 CERT_TO_GENERATE=${KEYFILE}-temp-key # This is the private key you will use to log into TTD nodes
+export VAULT_ADDR=https://vault.adsrvr.org
+
+echo $KEYFILE
+echo $CERT_TO_GENERATE
 
 set -e
 
@@ -23,6 +27,7 @@ fi
 FILE=${KEYFILE}.pubkey-semaphore
 NINE_HOURS=32400
 if [[ ! -f ${FILE} || $(($(date +%s)-$(date -r ${FILE} +%s))) -gt $NINE_HOURS ]]; then
+  echo "vault write"
   vault write -field=signed_key \
         ssh-client-signer/sign/ops_sso_user valid_principals=$(whoami) \
         public_key=@${KEYFILE}.pub > ${CERT_TO_GENERATE}
