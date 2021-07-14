@@ -52,7 +52,7 @@ git pull --rebase
 
 
 # problem here is have deleted .python-version
-# cd ~/code/ans/ttd-ansible
-# echo
-# pwd
-# git pull --rebase
+cd ~/code/ans/ttd-ansible
+echo
+pwd
+git pull --rebase
