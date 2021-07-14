@@ -1,0 +1,8 @@
+#!/bin/bash
+for box in `vagrant box list | awk '{print $1}'`; do vagrant box update --box $box; done
+
+# note: to install a new vagrant box (outside of vpn):
+#   mkdir junk
+#   cd junk
+#   vagrant init bento/ubuntu-20.04
+#   vagrant up
