@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ ! -e "$HOME/.config/no-vpn" ]; then
+  (scutil --nc status "Ventura" | grep Connected) ||networksetup -connectpppoeservice "Ventura"
+# else
+#   echo "file 'no-vpn exists', skipping connecting"
+fi
+
