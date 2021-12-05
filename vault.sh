@@ -1,6 +1,8 @@
 #!/bin/bash
 # The original keys to authenticate with are ~/.ssh/ttd-vault and ~/.ssh/ttd-vault.pub,
 # and the private key to use for ssh'ing is ~/.ssh/ttd-vault-temp-cert
+#
+# https://atlassian.thetradedesk.com/confluence/display/EN/SSH+Certificate+Based+Authentication
 
 KEYFILE=${HOME}/.ssh/ttd-vault
 CERT_TO_GENERATE=${KEYFILE}-temp-key # This is the private key you will use to log into TTD nodes

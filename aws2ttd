@@ -1,10 +1,17 @@
-#!/usr/bin/env ruby
-require_relative 'aws'
+#!/bin/sh
 
-region = AwsEc2.new.region_named('us-east-1')
-ids = ARGV.collect do |name|
-  instance = region.instance(name)
-  "#{instance.id}: #{instance.instance_name}"
-end
 
-puts ids.join("\n")
+##!/usr/bin/env ruby
+#require_relative 'aws'
+
+#region = AwsEc2.new.region_named('us-east-1')
+#ids = ARGV.collect do |name|
+#  instance = region.instance(name)
+#  "#{instance.id}: #{instance.instance_name}"
+#end
+
+#puts ids.join("\n")
+
+
+ttdops list nodes --instance_id $1 --format plain
+
