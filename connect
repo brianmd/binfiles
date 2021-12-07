@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "setting up dns for vpn"
+networksetup -setdnsservers Wi-Fi 192.168.1.1 10.10.1.11 10.100.55.67 10.104.2.174 10.104.1.6
+networksetup -getdnsservers Wi-Fi
+echo "running vault on bionic"
+ssh bionic vault.sh
+echo "grabbing vault key"
+rsync -azP bionic:.ssh/ttd-vault-temp-key ~/.ssh/
+sshoot stop ttd1 2> /dev/null
+echo "restarting sshoot (use $(hostname) pw for $(whoami))"
+sshoot start ttd1
