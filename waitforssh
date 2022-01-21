@@ -5,9 +5,7 @@ if [[ $? -eq 0 ]]; then
 else
   hostname=`ttdip $1`
 fi
-echo $hostname
-
-exit 0
+# echo $hostname
 
 while true; do
   if $(nc -L 5  -G 10 -z $hostname 22); then
