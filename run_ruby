@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ -x /opt/chef/embedded/bin/ruby ]]; then
+  echo '   using chef ruby'
+  exec /opt/chef/embedded/bin/ruby "$@"
+else
+  echo '   using system ruby'
+  exec ruby "$@"
+fi
