@@ -1,5 +1,8 @@
 #!/bin/sh
+# networksetup -listallhardwareports
+#
 echo "setting up dns for vpn"
+# networksetup -setdnsservers Wi-Fi 8.8.8.8 10.56.225.11
 networksetup -setdnsservers Wi-Fi 192.168.1.1 10.10.1.11 10.100.55.67 10.104.2.174 10.104.1.6
 networksetup -getdnsservers Wi-Fi
 echo "running vault on bionic"
