@@ -1,0 +1,12 @@
+#!/bin/bash
+while true; do
+  echo $1
+  tsh $1 asd --version
+  if [[ $? = 0 ]]; then
+    break
+  fi
+  echo -n '.'
+  sleep 60
+done
+echo "yay, asd exists on $1"
+test -x /usr/bin/say && say "a s d exists on $1"

@@ -1,0 +1,12 @@
+#!/bin/bash
+while true; do
+  echo $1
+  tsh $1 pidof asd
+  if [[ $? = 0 ]]; then
+    break
+  fi
+  echo -n '.'
+  sleep 60
+done
+echo "yay, aerospike is joined on $1"
+test -x /usr/bin/say && say "aerospike is joined on $1"

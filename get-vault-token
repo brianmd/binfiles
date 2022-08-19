@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ "$#" -ne 1 ]; then
+  echo 'usage: . get-vault-token ops-password'
+  echo 'note:  by using <period><space>, VAULT_TOKEN will be set in your environment'
+else
+  result=`curl -s --request POST --data '{"password": "'$1'"}' https://tdsi-secrets.adsrvr.org/v1/auth/ldap/login/brian.murphy-dye`
+  export VAULT_TOKEN=`echo "$result" | jq -r .auth.client_token`
+  echo $VAULT_TOKEN
+fi
