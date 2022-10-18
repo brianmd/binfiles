@@ -1,0 +1,3 @@
+#!/bin/bash
+lein do clean, test
+npm run ci
