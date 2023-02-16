@@ -1,3 +1,4 @@
 #!/bin/bash
 # clj -M:test
+# clojure -M:test  # see https://github.com/lambdaisland/kaocha
 lein do clean, test

@@ -4,4 +4,6 @@
 # see rubytapas episode #255 httpd
 # to find where the un library lives:
 #   ruby -r un -e 'puts $LOADED_FEATURES.grep(/un.rb$/)'
-ruby -run -e httpd . --port 8080
+#
+# may need to `gem install un webrick`
+ruby -run -e httpd . --port=8008 --binding=0.0.0.0 "$@"
