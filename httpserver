@@ -1,4 +1,7 @@
 #!/bin/bash
+# usage: httpserver
+# result: serves current directory on port 8008, binding to 0.0.0.0
+#
 #python -m SimpleHTTPServer 8080
 
 # see rubytapas episode #255 httpd
@@ -6,4 +9,4 @@
 #   ruby -r un -e 'puts $LOADED_FEATURES.grep(/un.rb$/)'
 #
 # may need to `gem install un webrick`
-ruby -run -e httpd . --port=8008 --binding=0.0.0.0 "$@"
+ruby -run -e httpd . -p 8008 -b 0.0.0.0 "$@"
