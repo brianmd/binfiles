@@ -1,0 +1,57 @@
+#!/bin/bash
+sed -i.bak '3a\
+\
+            [sideload.base :as base]\
+            [sideload.components.db :as re-comp]\
+            [sideload.components.collapsable-panel :refer [panel]]\
+            [sideload.components.show.app-db :refer [show-app-db]]\
+            [sideload.components.show.my-tasks :refer [show-my-tasks]]\
+            [sideload.components.show.permissions :as show-perms]\
+
+' src/sphere/views/page_container.cljs
+
+
+sed -i.bak '/gvt.page-header/a\
+\
+    ;; [sideload/show-info]\
+    [show-app-db]\
+    [show-perms/show-new-role-permissions]\
+    [show-perms/show-module-functional-areas]\
+    [show-my-tasks]\
+
+' src/sphere/views/page_container.cljs
+
+# remove the .bak file, which was created to make same sed command
+# compatible w/ both linux and mac
+rm src/sphere/views/page_container.cljs.bak
+
+
+
+
+
+# Here is a sed cheatsheet:
+#
+#    :  # label
+#    =  # line_number
+#    a  # append_text_to_stdout_after_flush
+#    b  # branch_unconditional
+#    c  # range_change
+#    d  # pattern_delete_top/cycle
+#    D  # pattern_ltrunc(line+nl)_top/cycle
+#    g  # pattern=hold
+#    G  # pattern+=nl+hold
+#    h  # hold=pattern
+#    H  # hold+=nl+pattern
+#    i  # insert_text_to_stdout_now
+#    l  # pattern_list
+#    n  # pattern_flush=nextline_continue
+#    N  # pattern+=nl+nextline
+#    p  # pattern_print
+#    P  # pattern_first_line_print
+#    q  # flush_quit
+#    r  # append_file_to_stdout_after_flush
+#    s  # substitute
+#    t  # branch_on_substitute
+#    w  # append_pattern_to_file_now
+#    x  # swap_pattern_and_hold
+#    y  # transform_chars
