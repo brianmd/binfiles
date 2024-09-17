@@ -1,0 +1,22 @@
+# • 0, 1: No Action
+# • 2: Mission Control (We’ve used this, right?)
+# • 3: Application Windows
+# • 4: Desktop
+# • 5: Start Screen Saver
+# • 6: Disable Screen Saver
+# • 7: Dashboard (Discontinued from macOS Catalina)
+# • 10: Put Display to Sleep
+# • 11: Launchpad
+# • 12: Notification Centre
+# • 13: Lock Screen
+# • 14: Quick Note
+
+# bottom left, lock screen (must hold command key for all these)
+defaults write com.apple.dock wvous-bl-corner -int 13
+defaults write com.apple.dock wvous-bl-modifier -int 1048576
+
+# bottom right, quick note
+defaults write com.apple.dock wvous-br-corner -int 14
+defaults write com.apple.dock wvous-br-modifier -int 1048576
+
+killall Dock
