@@ -1,8 +1,0 @@
-#!/bin/sh
-# dir="$HOME/drop/notes"
-# d=`date +%Y/%m`
-# fulldir="$dir/$d"
-# filename="$fulldir/log.org"
-# mkdir -p ${fulldir}
-filename=$(logit-filename)
-echo "$(date)  $*" >> $filename

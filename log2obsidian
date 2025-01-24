@@ -1,0 +1,52 @@
+#!/usr/bin/env bb
+(require '[clojure.string :as str])
+(require '[clojure.java.browse :as browse])
+(require '[babashka.process :refer [process]]
+         '[babashka.fs :as fs])
+
+(defn read-multiple-lines []
+  (println "what do you want to log (hit ctrl-d to log)?\n  Note: today's journal file is expected to be created.")
+  (let [input (slurp *in*)]
+    ;; (clojure.string/split-lines input)
+    input))
+
+(defn get-input [prompt]
+  (println "what do you want to log?")
+  (let [input (clojure.string/trim (read-line))]
+    (if (empty? input)
+      (do
+        (println "No input provided.")
+        (System/exit 1))
+      input)))
+
+(defn copy-to-clipboard [text]
+  (let [os (System/getProperty "os.name")
+  _ (println os)
+        proc (cond
+               (.contains os "Mac") (process ["pbcopy"] {:in text})
+               (.contains os "Linux") (process ["xclip" "-selection" "clipboard"] {:in text})
+               (.contains os "Windows") (process ["powershell.exe" "-command" "Set-Clipboard" text])
+               :else (throw (Exception. "Unsupported OS")))]
+    @proc))
+
+(defn current-date []
+  (let [now (java.time.LocalDate/now)
+        year (.getYear now)
+        month (.getMonthValue now)
+        day (.getDayOfMonth now)
+        day-name (.getDayOfWeek now)]
+    {:year year
+     :month (format "%02d" month)
+     :day (format "%02d" day)
+     :day-name (.name day-name)}))
+
+(defn open-obsidian [text]
+  (let [{:keys [year month day day-name]} (current-date)
+        url (str "obsidian://new?vault=Incubator&file=/Journal/Daily/" year "/" month "/" year "-" month "-" day "." (str/lower-case day-name) "&append=true&clipboard")]
+    (copy-to-clipboard text)
+    (browse/browse-url url)))
+
+(let [user-input (or (first *command-line-args*)
+                     ;; (get-input "Enter text to copy to clipboard:")
+                     (read-multiple-lines))]
+  (open-obsidian user-input))
