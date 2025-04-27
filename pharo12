@@ -1,0 +1,4 @@
+#!/bin/sh
+cd ~/Documents/Pharo/images/Pharo\ 12.0\ -\ 64bit\ \(stable\)
+/Applications/PharoLauncher.app/Contents/MacOS/Pharo Pharo\ 12.0\ -\ 64bit\ \(stable\).image
+
