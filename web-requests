@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh oracle 'code/web/web-requests 24h' | ag -v www | ag -v 73.242.192.164

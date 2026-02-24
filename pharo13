@@ -1,0 +1,6 @@
+#!/bin/sh
+cd ~/Documents/Pharo/images/Pharo\ 13.0\ -\ 64bit\ \(development\ version\,\ latest\)
+# This causes an error in OSProcess: %{%}) %{%}✗%{%}
+export ZSH_THEME_HG_PROMPT_DIRTY=
+/Applications/PharoLauncher\ 2.app/Contents/MacOS/Pharo Pharo\ 13.0\ -\ 64bit\ \(development\ version\,\ latest\).image
+
