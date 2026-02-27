@@ -1,2 +1,4 @@
 #!/bin/sh
-ssh oracle 'code/web/web-requests 24h' | ag -v www | ag risensavior\.com | ag -v 146.75.203.65
+hours=${1:-30}
+myip=$(curl -s https://api.ipify.org)
+ssh oracle "code/web/web-requests ${hours}h" | ag -v www | ag risensavior\.com | ag -v "$myip"
