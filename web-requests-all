@@ -1,0 +1,6 @@
+#!/bin/sh
+hours=${1:-30}
+# myip=$(curl -s https://api.ipify.org)
+# myip=$(curl -s https://ifconfig.me)
+# echo $myip
+ssh oracle "code/web/web-requests ${hours}h" | ag -v 'www\.[a-zA-Z0-9.]*\.com' | ag risensavior.com
